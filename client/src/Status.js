@@ -66,11 +66,6 @@ class Status extends React.Component {
 
     return (
       <div>
-        <p>
-          oma steamid: 76561197965321195
-          hacker id: 76561198217220376
-          STEAM_1:1:2527733
-        </p>
         <form onSubmit={this.handleSubmit}>
           <label>
             Match Status:
