@@ -1,0 +1,60 @@
+body {
+  background: linear-gradient(black, #3b3b3b);
+  color: white;
+  font-family: sans-serif;
+}
+
+label {
+  display: block;
+	margin: 0 auto;
+}
+
+textarea {
+  display: block;
+  padding: 2px;
+  width: 500px;
+  height:300px;
+  margin: 0 auto;
+  background: #3b3b3b;
+  color: white;
+}
+
+input[type="submit"] {
+  display: block;
+  margin:0 auto;
+  padding: 5px 20px;
+}
+
+ul {
+  display: block;
+  list-style: none;
+  margin: 0 auto;
+  max-width: 70%;
+}
+
+ul li {
+  float: left;
+  width: 250px;
+  height: 400px;
+}
+
+.friendsWith li {
+  float: none;
+  width: auto;
+  height: auto;
+}
+.playersummaries {
+
+}
+p {
+  margin: 1px;
+}
+
+img {
+  display: block;
+  margin: 0 auto;
+}
+.App {
+  margin-top: 1em;
+  padding-bottom: 100%;
+}
