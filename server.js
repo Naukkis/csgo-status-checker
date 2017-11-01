@@ -86,6 +86,9 @@ app.get('/:route/', (req, res) => {
     case 'recentlyPlayedGames':
       url ='http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=' + apikey + '&steamid=' + req.query.q;
       break;
+    case 'banStatus':
+      url = 'https://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=' + apikey + '&steamids='  + req.query.q;
+      break;
     default:
       res.send("Not found");
   }

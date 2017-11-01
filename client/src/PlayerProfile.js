@@ -10,19 +10,34 @@ class PlayerProfile extends React.Component {
       playerStats: [],
       bannedFriends: 0,
       friends: [],
-      CSGOPlaytime: {}
+      CSGOPlaytime: {},
+      banStatus: {}
     }
     this.getPlayerStats = this.getPlayerStats.bind(this);
     this.getFriendsList = this.getFriendsList.bind(this);
     this.countBannedFriends = this.countBannedFriends.bind(this);
     this.checkWhoAreFriends = this.checkWhoAreFriends.bind(this);
     this.getCSGOPlayTime = this.getCSGOPlayTime.bind(this);
+    this.getBanStatus = this.getBanStatus.bind(this);
+
+    this.getBanStatus(this.props.playerSummary.steamid);
 
     if (this.props.playerSummary.communityvisibilitystate === 3) {
       this.getPlayerStats(this.props.playerSummary.steamid);
       this.getCSGOPlayTime(this.props.playerSummary.steamid);
       this.getFriendsList(this.props.playerSummary.steamid, this.countBannedFriends, this.checkWhoAreFriends);
     }
+  }
+
+  getBanStatus(steamid) {
+    axios.get(`banStatus/?q=${steamid}`)
+      .then(response => {
+        console.log(response.data.players[0])
+        this.setState({banStatus: response.data.players[0]})
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
   getFriendsList(steamid, countBannedFriends, checkWhoAreFriends) {
@@ -98,6 +113,16 @@ class PlayerProfile extends React.Component {
         alt="avatar"
       />
       <div>
+        <div>{this.state.banStatus.VACBanned ? (
+          <div style={{color: 'red'}}>
+            <p>VAC BANNED</p>
+            <p>Number of VAC bans: {this.state.banStatus.NumberOfVACBans} </p>
+            <p>Days since last ban: {this.state.banStatus.DaysSinceLastBan} </p>
+          </div>
+        ) : <p>No VAC bans on record</p> }</div>
+        <p>Number of Game Bans: {this.state.banStatus.NumberOfGameBans}</p>
+      </div>
+      <div>
         {this.state.playerStats.length > 0 ?
           (
             <div>
@@ -113,7 +138,7 @@ class PlayerProfile extends React.Component {
               </ul>
             </div>
           ) :
-          (<p>Private Profile</p>)
+          <p>Private Profile</p>
         }
       </div>
     </div>
