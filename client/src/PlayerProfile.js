@@ -105,41 +105,43 @@ class PlayerProfile extends React.Component {
   }
 
   render() {
+    let profileurl = 'http://steamcommunity.com/profiles/' + this.props.playerSummary.steamid;
     return (
     <div>
-      <h1 >{this.props.playerSummary.personaname}</h1>
-      <img src={this.props.playerSummary.avatarmedium}
-        alt="avatar"
-      />
-      <div>
-        <div>{this.state.banStatus.VACBanned ? (
-          <div style={{color: 'red'}}>
-            <p>VAC BANNED</p>
-            <p>Number of VAC bans: {this.state.banStatus.NumberOfVACBans} </p>
-            <p>Days since last ban: {this.state.banStatus.DaysSinceLastBan} </p>
-          </div>
-        ) : <p style={{color: 'green'}}>No VAC bans on record</p> }</div>
-        <p>Number of Game Bans: {this.state.banStatus.NumberOfGameBans}</p>
-      </div>
-      <div>
-        {this.state.playerStats.length > 0 ?
-          (
-            <div>
-              <Stats playerSummary={this.props.playerSummary} playerStats={this.state.playerStats} csgoplaytime={this.state.CSGOPlaytime}/>
-              <Banned bannedFriends={this.state.bannedFriends} />
-              <p>Friends with:</p>
-              <ul className='friendsWith'>
-                {this.state.friends.map((friend) =>
-                  <li key={friend}>
-                    {friend}
-                  </li>
-                )}
-              </ul>
+      <a href={profileurl}> <h1>{this.props.playerSummary.personaname}</h1>
+        <img src={this.props.playerSummary.avatarmedium}
+          alt="avatar"
+        />
+        <div>
+          <div>{this.state.banStatus.VACBanned ? (
+            <div style={{color: 'red'}}>
+              <p>VAC BANNED</p>
+              <p>Number of VAC bans: {this.state.banStatus.NumberOfVACBans} </p>
+              <p>Days since last ban: {this.state.banStatus.DaysSinceLastBan} </p>
             </div>
-          ) :
-          <p>Private Profile</p>
-        }
-      </div>
+          ) : <p style={{color: 'green'}}>No VAC bans on record</p> }</div>
+          <p>Number of Game Bans: {this.state.banStatus.NumberOfGameBans}</p>
+        </div>
+        <div>
+          {this.state.playerStats.length > 0 ?
+            (
+              <div>
+                <Stats playerSummary={this.props.playerSummary} playerStats={this.state.playerStats} csgoplaytime={this.state.CSGOPlaytime}/>
+                <Banned bannedFriends={this.state.bannedFriends} />
+                <p>Friends with:</p>
+                <ul className='friendsWith'>
+                  {this.state.friends.map((friend) =>
+                    <li key={friend}>
+                      {friend}
+                    </li>
+                  )}
+                </ul>
+              </div>
+            ) :
+            <p>Private Profile</p>
+          }
+        </div>
+      </a>
     </div>
   );
   }

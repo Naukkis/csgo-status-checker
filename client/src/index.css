@@ -15,6 +15,11 @@ label {
 	margin: 0 auto;
 }
 
+a {
+color: white;
+text-decoration: none;
+}
+
 textarea {
   display: block;
   padding: 2px;
