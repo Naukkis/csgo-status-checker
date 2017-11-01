@@ -32,7 +32,6 @@ class PlayerProfile extends React.Component {
   getBanStatus(steamid) {
     axios.get(`banStatus/?q=${steamid}`)
       .then(response => {
-        console.log(response.data.players[0])
         this.setState({banStatus: response.data.players[0]})
       })
       .catch((error) => {
@@ -119,7 +118,7 @@ class PlayerProfile extends React.Component {
             <p>Number of VAC bans: {this.state.banStatus.NumberOfVACBans} </p>
             <p>Days since last ban: {this.state.banStatus.DaysSinceLastBan} </p>
           </div>
-        ) : <p>No VAC bans on record</p> }</div>
+        ) : <p style={{color: 'green'}}>No VAC bans on record</p> }</div>
         <p>Number of Game Bans: {this.state.banStatus.NumberOfGameBans}</p>
       </div>
       <div>

@@ -19,7 +19,7 @@ textarea {
   display: block;
   padding: 2px;
   width: 500px;
-  height:300px;
+  height:210px;
   margin: 0 auto;
   background: #3b3b3b;
   color: white;
@@ -41,7 +41,6 @@ ul {
 ul li {
   float: left;
   width: 250px;
-
   height: 500px;
 }
 
