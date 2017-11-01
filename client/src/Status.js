@@ -68,9 +68,10 @@ class Status extends React.Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <label>
-            Match Status:
-            <textarea value={this.state.value} onChange={this.handleChange} />
+            Match Status / Steam ID:
           </label>
+          <textarea value={this.state.value} onChange={this.handleChange} />
+
           <input type="submit" value="Submit" />
         </form>
 
