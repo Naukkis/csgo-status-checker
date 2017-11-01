@@ -52,6 +52,25 @@ app.get("/getBanned", (req, response) => {
         });
 });
 
+app.get("/ownedGames", (req, res) => {
+  let url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=' + apikey + '&steamid=' + req.query.q;
+  axios.get(url)
+  .then(function(response) {
+    let csgo = {}
+    if(response.data.response.games) {
+      response.data.response.games.forEach((game) => {
+        if (game.appid === 730) {
+          csgo = game;
+        }
+      })
+    }
+    res.send(csgo);
+  })
+  .catch((error) => {
+    console.log(error);
+  })
+});
+
 app.get('/:route/', (req, res) => {
   let url = '';
   switch(req.params.route) {
