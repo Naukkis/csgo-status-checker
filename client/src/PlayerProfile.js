@@ -8,35 +8,32 @@ class PlayerProfile extends React.Component {
     super(props);
     this.state = {
       playerStats: [],
-      recentlyPlayedCSGO: {},
       bannedFriends: 0,
       friends: [],
-      color: 'grey'
+      CSGOPlaytime: {}
     }
     this.getPlayerStats = this.getPlayerStats.bind(this);
-    this.getRecentlyPlayedCSGO = this.getRecentlyPlayedCSGO.bind(this);
     this.getFriendsList = this.getFriendsList.bind(this);
     this.countBannedFriends = this.countBannedFriends.bind(this);
     this.checkWhoAreFriends = this.checkWhoAreFriends.bind(this);
+    this.getCSGOPlayTime = this.getCSGOPlayTime.bind(this);
 
     if (this.props.playerSummary.communityvisibilitystate === 3) {
       this.getPlayerStats(this.props.playerSummary.steamid);
-      this.getRecentlyPlayedCSGO(this.props.playerSummary.steamid);
+      this.getCSGOPlayTime(this.props.playerSummary.steamid);
       this.getFriendsList(this.props.playerSummary.steamid, this.countBannedFriends, this.checkWhoAreFriends);
     }
   }
 
   getFriendsList(steamid, countBannedFriends, checkWhoAreFriends) {
-    fetch(`getBanned/?q=${steamid}`).then(response => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error ('Request failed!');
-    }, networkError => console.log(networkError.message)
-  ).then(jsonResponse => {
-      countBannedFriends(jsonResponse);
-      checkWhoAreFriends(jsonResponse);
-    })
+    axios.get(`getBanned/?q=${steamid}`)
+      .then(response => {
+        countBannedFriends(response.data);
+        checkWhoAreFriends(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
   countBannedFriends(friendsList) {
@@ -49,7 +46,6 @@ class PlayerProfile extends React.Component {
     this.setState({ bannedFriends: bannedFriends});
   }
 
-// TODO: merkkaa friendsit jotenki
   checkWhoAreFriends(friendsList) {
     let friends = [];
     let nickQuery = '';
@@ -75,33 +71,23 @@ class PlayerProfile extends React.Component {
   }
 
   getPlayerStats(steamid) {
-    fetch(`getPlayerStats/?q=${steamid}`).then(response => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error ('Request failed!');
-    }, networkError => console.log(networkError.message)
-  ).then(jsonResponse => {
-       this.setState({playerStats: jsonResponse.playerstats.stats});
-  })
+    axios.get(`getPlayerStats/?q=${steamid}`)
+      .then(response => {
+        this.setState({playerStats: response.data.playerstats.stats});
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
-  getRecentlyPlayedCSGO(steamid) {
-    fetch(`recentlyPlayedGames/?q=${steamid}`).then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error ('Request failed!');
-      }, networkError => console.log(networkError.message)
-      ).then(jsonResponse => {
-        let recently;
-        if (jsonResponse.response.games === undefined) {
-          recently = 'private profile';
-        } else {
-          recently = jsonResponse.response.games[0];
-        }
-       this.setState({recentlyPlayedCSGO: recently});
-     })
+  getCSGOPlayTime(steamid) {
+    axios.get(`ownedGames/?q=${steamid}`)
+      .then(response => {
+        this.setState({CSGOPlaytime: response.data});
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   render() {
@@ -115,7 +101,7 @@ class PlayerProfile extends React.Component {
         {this.state.playerStats.length > 0 ?
           (
             <div>
-              <Stats playerSummary={this.props.playerSummary} playerStats={this.state.playerStats} recentlyPlayedCSGO={this.state.recentlyPlayedCSGO} color={this.state.color}/>
+              <Stats playerSummary={this.props.playerSummary} playerStats={this.state.playerStats} csgoplaytime={this.state.CSGOPlaytime}/>
               <Banned bannedFriends={this.state.bannedFriends} />
               <p>Friends with:</p>
               <ul className='friendsWith'>
