@@ -32,7 +32,7 @@ class Stats extends React.Component {
     <div>
       <p>Account created: {betterDate} </p>
       <p>Steamid64: {this.props.playerSummary.steamid}</p>
-      <p>Steam play time on record: {Math.floor(this.props.recentlyPlayedCSGO.playtime_forever / 60)}h </p>
+      <p>Steam play time on record:  {Math.floor(this.props.csgoplaytime.playtime_forever / 60)}h </p>
       <p>Actual time played:  {Math.floor(this.props.playerStats[2].value / 60 / 60)}h </p>
       <p>Headshot %: {Number(this.props.playerStats[25].value / this.props.playerStats[0].value).toPrecision(2) * 100} % </p>
       <p>Win %: { this.winPercentage() } %</p>
