@@ -52,6 +52,17 @@ app.get("/getBanned", (req, response) => {
         });
 });
 
+app.get("/operationMaps", (req, res) => {
+  let url = 'https://api.steampowered.com/ICSGOServers_730/GetGameMapsPlaytime/v1/?key=' + apikey + '&interval=month&gamemode=competitive&mapgroup=operation';
+  axios.get(url)
+    .then(function(response) {
+      res.send(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+})
+
 app.get("/ownedGames", (req, res) => {
   let url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=' + apikey + '&steamid=' + req.query.q;
   axios.get(url)
