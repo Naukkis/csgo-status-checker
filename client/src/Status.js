@@ -80,7 +80,7 @@ class Status extends React.Component {
 
     return (
       <div>
-        { this.state.operationMaps &&
+        { this.state.operationMaps.Rows &&
           <div id="operationMaps" style={{position: 'absolute', top: 10}}>
             <p> {this.state.operationMaps.Rows[0][1]} </p>
             <p> {this.state.operationMaps.Rows[0][2].toPrecision(2)} %</p>
