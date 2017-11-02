@@ -108,7 +108,7 @@ class PlayerProfile extends React.Component {
     let profileurl = 'http://steamcommunity.com/profiles/' + this.props.playerSummary.steamid;
     return (
     <div>
-      <a href={profileurl}> <h1>{this.props.playerSummary.personaname}</h1>
+      <a target="_blank" href={profileurl}> <h1>{this.props.playerSummary.personaname}</h1>
         <img src={this.props.playerSummary.avatarmedium}
           alt="avatar"
         />
