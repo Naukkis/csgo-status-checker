@@ -35,5 +35,5 @@ NODE_ENV=production STEAM_API_KEY=[your API key here] npm run server
 Note: To be able to access the server from outside network, the servers ip address need to be added to `server.js`:
 ```javascript
 app.listen(app.get("port"), '[IP ADDRESS]', () => {
-  console.log(`Find the server at: http://localhost:${app.get("port")}/`); // eslint-disable-line no-console
+  console.log(`Find the server at: http://localhost:${app.get("port")}/`);
 });
