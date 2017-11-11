@@ -1,7 +1,6 @@
 import React from 'react';
 import { steamidTo64 } from "./SteamIdConverter";
 import PlayerProfile from "./PlayerProfile";
-const axios = require('axios');
 
 class Status extends React.Component {
   constructor(props) {
@@ -16,9 +15,8 @@ class Status extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.getOperationMapStats = this.getOperationMapStats.bind(this);
     this.getPlayerSummaries = this.getPlayerSummaries.bind(this);
-    this.getOperationMapStats();
+
   }
 
   handleChange(event) {
@@ -66,44 +64,11 @@ class Status extends React.Component {
   })
   }
 
-  getOperationMapStats() {
-    axios.get(`/operationMaps`)
-      .then(response => {
-        this.setState({operationMaps: response.data.result});
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-  }
-
   render() {
 
     return (
       <div>
-        { this.state.operationMaps.Rows &&
-          <div id="operationMaps" style={{position: 'absolute', top: 10}}>
-            <p> {this.state.operationMaps.Rows[0][1]} </p>
-            <p> {this.state.operationMaps.Rows[0][2].toPrecision(2)} %</p>
 
-            <p> {this.state.operationMaps.Rows[1][1]} </p>
-            <p> {this.state.operationMaps.Rows[1][2].toPrecision(2)} %</p>
-
-            <p> {this.state.operationMaps.Rows[2][1]} </p>
-            <p> {this.state.operationMaps.Rows[2][2].toPrecision(2)} %</p>
-
-            <p> {this.state.operationMaps.Rows[3][1]} </p>
-            <p> {this.state.operationMaps.Rows[3][2].toPrecision(2)} %</p>
-
-            <p> {this.state.operationMaps.Rows[4][1]} </p>
-            <p> {this.state.operationMaps.Rows[4][2].toPrecision(2)} %</p>
-
-            <p> {this.state.operationMaps.Rows[5][1]} </p>
-            <p> {this.state.operationMaps.Rows[5][2].toPrecision(2)} %</p>
-
-            <p> {this.state.operationMaps.Rows[6][1]} </p>
-            <p> {this.state.operationMaps.Rows[6][2].toPrecision(2)} %</p>
-          </div>
-        }
         <form onSubmit={this.handleSubmit}>
           <label>
             Match Status / Steam ID:
