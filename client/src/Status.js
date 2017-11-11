@@ -70,8 +70,10 @@ class Status extends React.Component {
       <div>
 
         <form onSubmit={this.handleSubmit}>
+
           <label>
-            Match Status / Steam ID:
+             When in a CS:GO match, type 'status' to console. Paste the result here. 
+             Single SteamIDs or Steam64IDs work as well.
           </label>
           <textarea value={this.state.value} onChange={this.handleChange} />
 
