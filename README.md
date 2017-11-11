@@ -10,6 +10,8 @@ status
 ```
 Paste the results in the application.
 
+Try it on Heroku: https://pacific-basin-27096.herokuapp.com/
+
 ### Installation on Raspberry Pi 3, Raspbian Jessie
 Install nodejs:
 ```
