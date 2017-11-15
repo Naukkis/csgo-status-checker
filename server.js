@@ -1,6 +1,9 @@
 const express = require("express");
 const request = require('request');
 const axios = require('axios');
+const db = require('./queries');
+const morgan = require('morgan');
+var bodyParser = require('body-parser');
 
 const app = express();
 const apikey = process.env.STEAM_API_KEY;
@@ -9,6 +12,8 @@ app.set("port", process.env.PORT || 3001);
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
+
+
 
 function batchBanned(data) {
   var apibansquery = 'https://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=' + apikey + '&steamids=';
@@ -26,6 +31,12 @@ function batchBanned(data) {
     queries.push(apibansquery);
     return queries;
   }
+
+app.use(bodyParser.urlencoded({
+  extended: true
+}))
+
+app.use(morgan('dev'));
 
 app.get("/getBanned", (req, response) => {
     let url = 'https://api.steampowered.com/ISteamUser/GetFriendList/v1/?key=' + apikey + '&steamid=' + req.query.q;
@@ -52,16 +63,8 @@ app.get("/getBanned", (req, response) => {
         });
 });
 
-app.get("/operationMaps", (req, res) => {
-  let url = 'https://api.steampowered.com/ICSGOServers_730/GetGameMapsPlaytime/v1/?key=' + apikey + '&interval=month&gamemode=competitive&mapgroup=operation';
-  axios.get(url)
-    .then(function(response) {
-      res.send(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-})
+app.get('/dbtest', db.getAllUsers);
+app.post('/createUser', db.createUser);
 
 app.get("/ownedGames", (req, res) => {
   let url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=' + apikey + '&steamid=' + req.query.q;
@@ -114,5 +117,5 @@ app.get('/:route/', (req, res) => {
 });
 
 app.listen(app.get("port"), () => {
-  console.log(`Find the server at: http://localhost:${app.get("port")}/`); 
+  console.log(`Find the server at: http://localhost:${app.get("port")}/`);
 });
