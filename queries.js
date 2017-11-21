@@ -6,7 +6,7 @@ var options = {
 };
 
 var pgp = require('pg-promise')(options);
-var connectionString = 'postgres://postgres:pelle@localhost:5432/statuschecker';
+var connectionString = 'postgres://postgres:@localhost:5432/statuschecker';
 var db = pgp(connectionString);
 
 function getAllUsers(req, res, next) {
