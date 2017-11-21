@@ -13,8 +13,6 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
-
-
 function batchBanned(data) {
   var apibansquery = 'https://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=' + apikey + '&steamids=';
   let queries = [];
@@ -29,12 +27,13 @@ function batchBanned(data) {
         }
     });
     queries.push(apibansquery);
+
     return queries;
   }
 
 app.use(bodyParser.urlencoded({
   extended: true
-}))
+}));
 
 app.use(morgan('dev'));
 
@@ -63,8 +62,13 @@ app.get("/getBanned", (req, response) => {
         });
 });
 
-app.get('/dbtest', db.getAllUsers);
-app.post('/createUser', db.createUser);
+app.get('/database/getUser', db.getUser);
+app.get('/database/getAllUsers', db.getAllUsers);
+app.post('/database/createUser', db.createUser);
+app.delete('/database/removeUser', db.removeUser);
+app.post('/database/addMatch', db.addMatch);
+app.post('/database/saveMatch', db.saveMatch);
+app.post('/database/savedMatches', db.userSavedMatches);
 
 app.get("/ownedGames", (req, res) => {
   let url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=' + apikey + '&steamid=' + req.query.q;
@@ -115,6 +119,26 @@ app.get('/:route/', (req, res) => {
       console.log(error);
     });
 });
+
+if (process.env.NODE_ENV === "production") {
+  app.use(function(err, req, res, next) {
+    res.status( err.code || 500 )
+    .json({
+      status: 'error',
+      message: err
+    });
+  });
+}
+
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500)
+  .json({
+    status: 'error',
+    message: err.message
+  });
+  console.log(err.message);
+});
+
 
 app.listen(app.get("port"), () => {
   console.log(`Find the server at: http://localhost:${app.get("port")}/`);
