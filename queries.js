@@ -6,7 +6,7 @@ var options = {
 };
 
 var pgp = require('pg-promise')(options);
-var connectionString = 'postgres://postgres:pelle@localhost:5432/statuschecker';
+var connectionString = 'postgres://postgres:@localhost:5432/statuschecker';
 var db = pgp(connectionString);
 
 function getAllUsers(req, res, next) {
@@ -108,7 +108,9 @@ function saveMatch(req, res, next) {
 
 function userSavedMatches(req, res, next) {
   let steamid64 = req.body.steamid64;
-  db.any('select players, end_score from matches where id in (select match_id from saved_matches where user_id = (select id from users where steamid64 = $1))', steamid64)
+  db.any('select players, end_score from matches where id in'
+      +'(select match_id from saved_matches where user_id ='
+      +'(select id from users where steamid64 = $1))', steamid64)
         .then((data) => {
           res.status(200)
             .json({
