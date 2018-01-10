@@ -16,7 +16,6 @@ class Status extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getPlayerSummaries = this.getPlayerSummaries.bind(this);
-
   }
 
   handleChange(event) {
@@ -44,7 +43,6 @@ class Status extends React.Component {
         summaryQueryForAll = inputString.trim();
     }
 
-    console.log(summaryQueryForAll);
     this.getPlayerSummaries(summaryQueryForAll, function(result) {
       this.setState({playerSummaries: result.response.players});
     }.bind(this));
@@ -68,9 +66,7 @@ class Status extends React.Component {
 
     return (
       <div>
-
         <form onSubmit={this.handleSubmit}>
-
           <label>
              When in a CS:GO match, type 'status' to console. Paste the result here. 
              Single SteamIDs or Steam64IDs work as well.
@@ -79,7 +75,6 @@ class Status extends React.Component {
 
           <input type="submit" value="Submit" />
         </form>
-
         { this.state.playerSummaries.length > 0 &&
           <ul className="playersummaries">
             {this.state.playerSummaries.map((data) =>

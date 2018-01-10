@@ -36,14 +36,14 @@ input[type="submit"] {
   padding: 5px 20px;
 }
 
-ul {
+.playersummaries ul {
   display: block;
   list-style: none;
   margin: 0 auto;
   max-width: 70%;
 }
 
-ul li {
+.playersummaries ul li {
   float: left;
   width: 250px;
   height: 500px;
@@ -54,17 +54,19 @@ ul li {
   width: auto;
   height: auto;
 }
-.playersummaries {
 
-}
 p {
   margin: 3px;
 }
 
-.titleImage {
-  display: block;
-  margin: 0 auto;
+.modal-content {
+  background-color: darkgray;
 }
+
+.form-horizontal {
+  padding-top: 1em;
+}
+
 .App {
   margin-top: 1em;
   padding-bottom: 100%;

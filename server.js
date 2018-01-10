@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const request = require('request');
 const axios = require('axios');
 const db = require('./queries');
@@ -6,8 +6,10 @@ const morgan = require('morgan');
 var bodyParser = require('body-parser');
 
 const app = express();
+
 const apikey = process.env.STEAM_API_KEY;
 app.set("port", process.env.PORT || 3001);
+
 // Express only serves static assets in production
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
@@ -36,6 +38,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(morgan('dev'));
+
 
 app.get("/getBanned", (req, response) => {
     let url = 'https://api.steampowered.com/ISteamUser/GetFriendList/v1/?key=' + apikey + '&steamid=' + req.query.q;
@@ -119,6 +122,7 @@ app.get('/:route/', (req, res) => {
       console.log(error);
     });
 });
+
 
 if (process.env.NODE_ENV === "production") {
   app.use(function(err, req, res, next) {
