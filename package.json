@@ -8,6 +8,8 @@
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
     "express": "4.13.3",
+    "passport": "^0.4.0",
+    "passport-steam": "^1.0.8",
     "pg-promise": "^5.9.7",
     "request": "^2.83.0"
   },
