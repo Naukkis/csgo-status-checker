@@ -3,7 +3,7 @@ const request = require('request');
 const axios = require('axios');
 const db = require('./queries');
 const morgan = require('morgan');
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -64,13 +64,13 @@ app.get("/getBanned", (req, response) => {
         });
 });
 
-app.get('/database/getUser', db.getUser);
-app.get('/database/getAllUsers', db.getAllUsers);
-app.post('/database/createUser', db.createUser);
-app.delete('/database/removeUser', db.removeUser);
-app.post('/database/addMatch', db.addMatch);
-app.post('/database/saveMatch', db.saveMatch);
-app.post('/database/savedMatches', db.userSavedMatches);
+app.get('/database/get-user', db.getUser);
+app.get('/database/get-all-users', db.getAllUsers);
+app.post('/database/create-user', db.createUser);
+app.delete('/database/remove-user', db.removeUser);
+app.post('/database/add-match', db.addMatch);
+app.post('/database/save-match', db.saveMatch);
+app.post('/database/saved-matches', db.userSavedMatches);
 
 app.get("/ownedGames", (req, res) => {
   let url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=' + apikey + '&steamid=' + req.query.q;

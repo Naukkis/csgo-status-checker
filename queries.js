@@ -1,4 +1,5 @@
 const db = require('./db');
+const crypto = require("crypto");
 
 function getAllUsers(req, res, next) {
   db.any('select * from users')
@@ -16,10 +17,10 @@ function getAllUsers(req, res, next) {
 }
 
 function createUser(req, res, next) {
-  console.log(req.body);
-  db.none('insert into users(steamid64, username, email)'
-        + 'values($1, $2, $3)',
-        [req.body.steamid64, req.body.username, req.body.email])
+  let userid = crypto.randomBytes(3*4).toString('base64');
+  db.none('insert into users(user_id, steamid64, username, email)'
+        + 'values($1, $2, $3, $4)',
+        [userid, req.body.steamid64, req.body.username, req.body.email])
     .then(() => {
       res.status(200)
      .json({

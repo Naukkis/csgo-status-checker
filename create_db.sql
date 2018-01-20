@@ -10,14 +10,14 @@ CREATE TABLE matches(
 );
 
 CREATE TABLE users (
-	 id SERIAL PRIMARY KEY,
-	 steamid64 VARCHAR NOT NULL,
+	 user_id TEXT UNIQUE PRIMARY KEY,
+	 steamid64 TEXT NOT NULL,
 	 username TEXT,
 	 email TEXT
 );
 
 CREATE TABLE saved_matches (
 	id SERIAL PRIMARY KEY,
-	user_id INTEGER NOT NULL REFERENCES users(id),
+	user_id TEXT NOT NULL REFERENCES users(user_id),
 	match_id INTEGER NOT NULL REFERENCES matches(id)
 );
