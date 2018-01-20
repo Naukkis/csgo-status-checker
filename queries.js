@@ -1,13 +1,4 @@
-var promise = require('bluebird');
-
-var options = {
-  // Initialization Options
-  promiseLib: promise
-};
-
-var pgp = require('pg-promise')(options);
-var connectionString = 'postgres://postgres:@localhost:5432/statuschecker';
-var db = pgp(connectionString);
+const db = require('./db');
 
 function getAllUsers(req, res, next) {
   db.any('select * from users')

@@ -39,7 +39,6 @@ app.use(bodyParser.urlencoded({
 
 app.use(morgan('dev'));
 
-
 app.get("/getBanned", (req, response) => {
     let url = 'https://api.steampowered.com/ISteamUser/GetFriendList/v1/?key=' + apikey + '&steamid=' + req.query.q;
     let axiosPromises = [];
