@@ -1,6 +1,6 @@
 import React from 'react';
-import { steamidTo64 } from "./SteamIdConverter";
-import PlayerProfile from "./PlayerProfile";
+import { steamidTo64 } from './SteamIdConverter';
+import PlayerProfile from './PlayerProfile';
 
 class Status extends React.Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class Status extends React.Component {
 
   handleSubmit(event) {
     let steamIDregex = /STEAM_(0|1):(0|1):\d{1,}/g;
-    let summaryQueryForAll = "";
+    let summaryQueryForAll = '';
 
     let inputString = this.state.value;
     let matches = [];
@@ -37,7 +37,7 @@ class Status extends React.Component {
     if (matches.length > 0) {
       let id64 = matches.map(id => steamidTo64(id));
       this.setState({ steamids: id64});
-      id64.map(id => summaryQueryForAll += id + ",");
+      id64.map(id => summaryQueryForAll += id + ',');
 
     } else {
         summaryQueryForAll = inputString.trim();
@@ -57,9 +57,10 @@ class Status extends React.Component {
       }
       throw new Error ('Request failed!');
     }, networkError => console.log(networkError.message)
-  ).then(jsonResponse => {
+
+    ).then(jsonResponse => {
       cb(jsonResponse);
-  })
+    })
   }
 
   render() {
@@ -73,10 +74,10 @@ class Status extends React.Component {
           </label>
           <textarea value={this.state.value} onChange={this.handleChange} />
 
-          <input type="submit" value="Submit" />
+          <input type='submit' value='Submit' />
         </form>
         { this.state.playerSummaries.length > 0 &&
-          <ul className="playersummaries">
+          <ul className='playersummaries'>
             {this.state.playerSummaries.map((data) =>
               <li key={data.steamid}>
                 <PlayerProfile playerSummary={data} listOfIds={this.state.steamids} />
@@ -84,9 +85,7 @@ class Status extends React.Component {
             )}
           </ul>
         }
-
       </div>
-
       );
   }
 

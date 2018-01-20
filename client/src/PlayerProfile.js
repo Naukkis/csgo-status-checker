@@ -112,6 +112,7 @@ class PlayerProfile extends React.Component {
         <img src={this.props.playerSummary.avatarmedium}
           alt="avatar"
         />
+      </a>
         <div>
           <div>{this.state.banStatus.VACBanned ? (
             <div style={{color: 'red'}}>
@@ -141,7 +142,7 @@ class PlayerProfile extends React.Component {
             <p>Private Profile</p>
           }
         </div>
-      </a>
+      
     </div>
   );
   }
