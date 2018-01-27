@@ -1,16 +1,17 @@
 import React from 'react';
 
-class Banned extends React.Component {
-  render () {
-    return (
+function Banned(props) {
+  return (
     <div>
-      {this.props.bannedFriends > 0 ?
-        <p style={{color: 'red'}}>Banned friends: {this.props.bannedFriends}</p>
+      {props.bannedFriends > 0 ?
+        <p style={{ color: 'red' }}>Banned friends: {props.bannedFriends}</p>
       :
-      <p>Banned friends: {this.props.bannedFriends}</p>}
+        <p>Banned friends: {props.bannedFriends}</p>}
     </div>
   );
-  }
 }
 
+Banned.propTypes = {
+  bannedFriends: React.PropTypes.number.isRequired,
+};
 export default Banned;

@@ -5,16 +5,21 @@
   "proxy": "http://localhost:3001/",
   "devDependencies": {
     "enzyme": "2.4.1",
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
     "react-addons-test-utils": "15.4.0",
     "react-scripts": "0.8.5"
   },
   "dependencies": {
     "axios": "^0.17.0",
+    "babel-eslint": "^7.2.3",
     "babel-plugin-transform-class-properties": "6.22.0",
-    "marked": "^0.3.9",
+    "prop-types": "^15.6.0",
     "ramda": "^0.25.0",
     "react": "^15.4.0",
-    "react-bootstrap": "^0.31.5",
     "react-dom": "^15.4.0"
   },
   "scripts": {

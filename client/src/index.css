@@ -40,6 +40,10 @@ input[type="submit"] {
   padding: 5px 20px;
 }
 
+p {
+  margin: 3px;
+}
+
 .playersummaries {
   display: block;
   list-style: none;
@@ -57,16 +61,21 @@ input[type="submit"] {
   height: auto;
 }
 
-p {
-  margin: 3px;
+.navBar {
+  list-style: none;
 }
 
-.modal-content {
-  background-color: darkgray;
+.navBar li a {
+  display: block;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  max-width: 100px;
 }
 
-.form-horizontal {
-  padding-top: 1em;
+.navBar li a:hover {
+  background-color: #555;
+  color: white;
 }
 
 .App {
