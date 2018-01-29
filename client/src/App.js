@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Status from './Status';
-import NavigationBar from './NavigationBar';
+import Status from './components/Status';
+import NavigationBar from './components/NavigationBar';
 
 // eslint-disable-next-line
 class App extends Component {

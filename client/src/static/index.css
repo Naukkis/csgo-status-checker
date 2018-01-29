@@ -40,6 +40,11 @@ input[type="submit"] {
   padding: 5px 20px;
 }
 
+input[type="number"] {
+  color: black;
+  width: 35px;
+}
+
 p {
   margin: 3px;
 }
