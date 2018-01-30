@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Status from './components/Status';
+import StatusInput from './components/StatusInput';
 import NavigationBar from './components/NavigationBar';
 
 // eslint-disable-next-line
@@ -8,7 +8,7 @@ class App extends Component {
     return (
       <div className="App ui text container">
         <NavigationBar />
-        <Status />
+        <StatusInput />
       </div>);
   }
 }

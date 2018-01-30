@@ -1,9 +1,10 @@
 import React from 'react';
+import StatusResult from './StatusResult';
 import findSteamID from '../utils/SteamIdConverter';
 import { playerSummaries } from '../utils/apiCalls';
-import PlayerProfile from './PlayerProfile';
 
-class Status extends React.Component {
+
+class StatusInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,17 +41,11 @@ class Status extends React.Component {
           <input type="submit" value="Submit" />
         </form>
         { this.state.playerSummaries.length > 0 &&
-          <ul className="playersummaries">
-            { this.state.playerSummaries.map(data =>
-             (
-               <li key={data.steamid}>
-                 <PlayerProfile playerSummary={data} listOfIds={this.state.steamids} />
-               </li>)) }
-          </ul>
+        <StatusResult playerSummaries={this.state.playerSummaries} steamids={this.state.steamids}/>
         }
       </div>
     );
   }
 }
 
-export default Status;
+export default StatusInput;
