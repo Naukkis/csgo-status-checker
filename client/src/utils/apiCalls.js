@@ -28,32 +28,37 @@ function countBannedFriends(friendList) {
   return bannedFriends;
 }
 
-function checkWhoAreFriends(friendList, idsToCompare, cb) {
-  const friends = [];
-  let nickQuery = '';
+function buildQuery(friendList, idsToCompare) {
+  let query = '';
   friendList.forEach((player) => {
     idsToCompare.forEach((id) => {
       if (id === player.SteamId) {
-        nickQuery += `${player.SteamId},`;
+        query += `${player.SteamId},`;
       }
     });
   });
+  return query;
+}
+
+function checkWhoAreFriends(friendList, idsToCompare, cb) {
+  const friendNames = [];
+  const nickQuery = buildQuery(friendList, idsToCompare);
   axios.get(`getPlayerSummary/?q= ${nickQuery}`)
     .then((response) => {
       response.data.response.players.forEach((player) => {
-        friends.push(player.personaname);
+        friendNames.push(player.personaname);
       });
-      cb(friends, countBannedFriends(friendList));
+      cb(friendNames, countBannedFriends(friendList));
     })
     .catch((error) => {
       console.log(error);
     });
 }
 
-function friendsList(steamid, idsToCompare, cb) {
+function friendsList(steamid, cb) {
   axios.get(`getBanned/?q=${steamid}`)
     .then((response) => {
-      checkWhoAreFriends(response.data, idsToCompare, cb);
+      cb(response.data);
     })
     .catch((error) => {
       console.log(error);
