@@ -58,12 +58,26 @@ p {
 .playersummaries li {
   float: left;
   width: 250px;
+  margin-bottom: 50px;
 }
 
 .friendsWith li {
   float: none;
   width: auto;
   height: auto;
+  margin-bottom: 0;
+}
+
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.item {
+  min-width: 300px;
+  max-width: 300px;
+  overflow: hidden;
 }
 
 .navBar {

@@ -14,18 +14,21 @@ class PlayerProfile extends React.Component {
       CSGOPlaytime: {},
       banStatus: {},
     };
+  }
 
+  componentDidMount() {
     const { steamid } = this.props.playerSummary;
     const idsToCompare = this.props.listOfIds;
-
+    const publicProfile = this.props.playerSummary.communityvisibilitystate;
     apiCalls.banStatus(steamid, data => this.setState({ banStatus: data }));
-    if (this.props.playerSummary.communityvisibilitystate === 3) {
+    if (publicProfile === 3) {
       apiCalls.playerStats(steamid, data => this.setState({ playerStats: data }));
       apiCalls.CSGOPlayTime(steamid, data => this.setState({ CSGOPlaytime: data }));
-      apiCalls.friendsList(steamid, idsToCompare, (friends, banned) => this.setState({
-        friends,
-        bannedFriends: banned,
-      }));
+      apiCalls.friendsList(steamid, (data) => {
+        apiCalls.checkWhoAreFriends(data, idsToCompare, (friendNames, bannedFriends) => {
+          this.setState({ friends: friendNames, bannedFriends });
+        });
+      });
     }
   }
 
@@ -40,34 +43,35 @@ class PlayerProfile extends React.Component {
           />
         </a>
         <div>
-          <div>{this.state.banStatus.VACBanned ? (
+          {this.state.banStatus.VACBanned ?
+          (
             <div style={{ color: 'red' }}>
               <p>VAC BANNED</p>
               <p>Number of VAC bans: {this.state.banStatus.NumberOfVACBans} </p>
               <p>Days since last ban: {this.state.banStatus.DaysSinceLastBan} </p>
             </div>
-            ) : <p style={{ color: 'green' }}>No VAC bans on record</p> }
-          </div>
+          ) :
+            <p style={{ color: 'green' }}>No VAC bans on record</p> }
           <p>Number of Game Bans: {this.state.banStatus.NumberOfGameBans}</p>
         </div>
         <div>
           {this.state.playerStats.length > 0 ?
-              (
-                <div>
-                  <Stats
-                    playerSummary={this.props.playerSummary}
-                    playerStats={this.state.playerStats}
-                    csgoplaytime={this.state.CSGOPlaytime}
-                  />
-                  <Banned bannedFriends={this.state.bannedFriends} />
-                  <p>Friends with:</p>
-                  <ul className="friendsWith">
-                    {this.state.friends.map(friend =>
-                      <li key={friend}> {friend} </li>)}
-                  </ul>
-                </div>
-              ) :
-                <p>Private Profile</p>
+          (
+            <div>
+              <Stats
+                playerSummary={this.props.playerSummary}
+                playerStats={this.state.playerStats}
+                csgoplaytime={this.state.CSGOPlaytime}
+              />
+              <Banned bannedFriends={this.state.bannedFriends} />
+              <p>Friends with:</p>
+              <ul className="friendsWith">
+                {this.state.friends.map(friend =>
+                  <li key={friend}> {friend} </li>)}
+              </ul>
+            </div>
+          ) :
+            <p>Private Profile</p>
             }
         </div>
       </div>
