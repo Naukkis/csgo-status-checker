@@ -1,106 +1,135 @@
-const db = require('./db');
+const { db } = require('./db');
 const crypto = require('crypto');
 
-function getAllUsers(req, res, next) {
-  db.any('select * from users').then((data) => {
-    res.status(200).json({
-      status: 'success',
-      data,
-      message: 'Retrieved ALL users',
-    });
-  }).catch(err => next(err));
-}
 
 function getUser(req, res, next) {
   const steamID = req.query.q;
-  db.one('select * from users where steamid64 = $1', steamID).then((data) => {
-    res.status(200).json({
-      status: 'success',
-      data,
-      message: 'Retrieved ONE user',
-    });
-  }).catch(err => next(err));
-}
-
-function findUser(user, cb) {
-  db.one('select * from users where steamid64 = $1', user.id).then((data) => {
-    cb(null, data);
-  }).catch((err) => {
-    if (err.message === 'No data returned from the query.') {
-      createUser(user, cb);
-    } else {
-      cb(err);
-    }
-  });
+  db.one('select * from users where steamid64 = $1', steamID)
+    .then((data) => {
+      res.status(200).json({
+        status: 'success',
+        data,
+        message: 'Retrieved ONE user',
+      });
+    })
+    .catch(error => next(error));
 }
 
 function createUser(user, cb) {
   const userid = crypto.randomBytes(3 * 4).toString('base64');
-  db.none('insert into users(user_id, steamid64, username, email)' + 'values($1, $2, $3, $4)', [userid, user.id, user.displayName, 'tester']).then(() => {
-    cb(null, user);
-  }).catch(error => {
-    cb(error);
-  });
+  db.one('insert into users(user_id, steamid64, username) values($1, $2, $3) returning user_id', [userid, user.id, user.displayName])
+    .then((data) => {
+      const createdUser = user;
+      createdUser.userid = data.user_id;
+      cb(null, createdUser);
+    })
+    .catch(error => cb(error));
+}
+
+function findUser(user, cb) {
+  db.oneOrNone('select user_id from users where steamid64 = $1', user.id)
+    .then((data) => {
+      if (data) {
+        cb(null, data);
+      } else {
+        createUser(user, cb);
+      }
+    })
+    .catch(err => cb(err));
 }
 
 function removeUser(req, res, next) {
-  var steamID = req.query.q;
-  db.result('delete from users where steamid64 = $1', steamID).then(function (result) {
+  const steamID = req.query.q;
+  db.result('delete from users where steamid64 = $1', steamID).then((result) => {
     res.status(200).json({
       status: 'success',
-      message: result.rowCount
+      message: result.rowCount,
     });
-  }).catch(function (err) {
-    return next(err);
-  });
+  })
+    .catch(error => next(error));
 }
 
 function addMatch(req, res, next) {
-  let playerIDs = req.body.playerIDs.split(",");
-  let endScore = req.body.endScore;
-  db.none('insert into matches(players, end_score)' + 'values($1, $2)', [playerIDs, endScore]).then(() => {
-    res.status(200).json({
-      status: 'success',
-      message: 'Inserted match'
-    });
-  }).catch(error => {
-    return next(error);
-  });
+  const {
+    teammates,
+    opponents,
+    teamScore,
+    opponentScore,
+    map,
+    userID,
+  } = req.body;
+
+  db.one(
+    'insert into matches(team_score, opponent_score, map_played, user_id, added_at)'
+    + ' values($1, $2, $3, $4, $5) returning match_id',
+    [teamScore, opponentScore, map, userID, new Date()],
+  )
+    .then((data) => {
+      teammates.forEach(id => addPlayer(id, data.match_id, 1));
+      opponents.forEach(id => addPlayer(id, data.match_id, 2));
+      res.status(200).json({
+        status: 'success',
+        message: 'match saved to user',
+        matchID: data.match_id,
+      });
+    })
+    .catch(error => next(error));
 }
 
-function saveMatch(req, res, next) {
-  let userID = req.body.userID;
-  let matchID = req.body.matchID;
-  db.none('insert into saved_matches(user_id, match_id)' + 'values($1, $2)', [userID, matchID]).then(() => {
-    res.status(200).json({
-      status: 'success',
-      message: 'match saved to user'
+function addPlayerToMatch(steamid64, matchID, team) {
+  db.none('insert into match_players(match_id, steamid64, team)'
+        + ' values($1, $2, $3)', [matchID, steamid64, team])
+    .catch(error => console.log(error));
+}
+
+function addPlayer(steamid64, match_id, team) {
+  db.oneOrNone('insert into players(steamid64) values($1)', steamid64)
+    .then(() => {
+      addPlayerToMatch(steamid64, match_id, team);
+    })
+    .catch((error) => {
+      if (error.code === '23505') {
+        addPlayerToMatch(steamid64, match_id, team);
+      } else {
+        console.log(error.code, error.message);
+      }
     });
-  }).catch(error => {
-    return next(error);
-  });
 }
 
 function userSavedMatches(req, res, next) {
-  let steamid64 = req.body.steamid64;
-  db.any('select players, end_score from matches where id in (select match_id from saved_matches where user_id = (select id from users where steamid64 = $1))', steamid64).then(data => {
-    res.status(200).json({
-      status: 'success',
-      data: data,
-      message: 'Retrieved users saved matches'
-    });
-  }).catch(error => {
-    return next(error);
-  });
+  const userID = req.session.user_id || req.query.q;
+  db.any('select * from matches where user_id = $1 order by added_at desc', userID)
+    .then((data) => {
+      res.status(200).json({
+        status: 'success',
+        data,
+        message: 'Retrieved users saved matches',
+      });
+    })
+    .catch(error => next(error));
+}
+
+function playersFromMatch(req, res, next) {
+  const { matchID } = req.query.q;
+  db.many('select steamid64, team, player_comment from match_players where match_id = $1', matchID)
+    .then((data) => {
+      res.status(200).json({
+        status: 'success',
+        data,
+        message: 'Retrieved players from a match',
+        time: new Date(),
+      });
+    })
+    .catch(error => next(error));
 }
 
 module.exports = {
-  getAllUsers,
   createUser,
   getUser,
   findUser,
   removeUser,
   addMatch,
-  saveMatch,
-  userSavedMatches
+  userSavedMatches,
+  addPlayerToMatch,
+  playersFromMatch,
 };

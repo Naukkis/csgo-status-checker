@@ -4,11 +4,11 @@
   "private": true,
   "dependencies": {
     "axios": "^0.17.0",
-    "babel-core": "6.14.0",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
     "express": "4.13.3",
     "express-session": "^1.15.6",
+    "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-steam": "^1.0.8",
     "pg-promise": "^5.9.7",
@@ -30,7 +30,9 @@
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.6.0",
     "jasmine": "^2.8.0",
-    "morgan": "^1.9.0",
     "nodemon": "^1.12.1"
+  },
+  "engines": {
+    "node": "9.4.0"
   }
 }
