@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Stats from './Stats';
 import Banned from './Banned';
 import apiCalls from '../utils/apiCalls';
+import AddTeammate from './buttons/AddTeammate';
 
 class PlayerProfile extends React.Component {
   constructor(props) {
@@ -34,14 +35,19 @@ class PlayerProfile extends React.Component {
 
   render() {
     const profileurl = `http://steamcommunity.com/profiles/ ${this.props.playerSummary.steamid}`;
+    const divStyle = {
+      backgroundColor: this.props.teammate ? '#8631bf' : 'lightblue',
+    };
+
     return (
-      <div>
-        <a target="_blank" href={profileurl}> <h1>{this.props.playerSummary.personaname}</h1>
+      <div style={divStyle} >
+        <a target="_blank" href={profileurl}> <h3>{this.props.playerSummary.personaname}</h3>
           <img
             src={this.props.playerSummary.avatarmedium}
             alt="avatar"
           />
         </a>
+         <AddTeammate steamid={this.props.playerSummary.steamid} onClick={this.props.onClick} />
         <div>
           {this.state.banStatus.VACBanned ?
           (
@@ -81,8 +87,17 @@ class PlayerProfile extends React.Component {
 
 PlayerProfile.propTypes = {
   playerSummary: PropTypes.shape({
-    timeCreated: '', steamid: '', personaname: '', avatarmedium: '', communityvisibilitystate: '',
+    timeCreated: '',
+    steamid: '',
+    personaname: '',
+    avatarmedium: '',
+    communityvisibilitystate: '',
   }).isRequired,
-  listOfIds: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+  listOfIds: PropTypes.array, // eslint-disable-line react/forbid-prop-types
 };
+
+PlayerProfile.defaultProps = {
+  listOfIds: '',
+};
+
 export default PlayerProfile;

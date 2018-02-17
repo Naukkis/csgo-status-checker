@@ -3,7 +3,6 @@ import StatusResult from './StatusResult';
 import findSteamID from '../utils/SteamIdConverter';
 import { playerSummaries } from '../utils/apiCalls';
 
-
 class StatusInput extends React.Component {
   constructor(props) {
     super(props);
@@ -12,7 +11,6 @@ class StatusInput extends React.Component {
       playerSummaries: [],
       steamids: [],
     };
-
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -41,7 +39,7 @@ class StatusInput extends React.Component {
           <input type="submit" value="Submit" />
         </form>
         { this.state.playerSummaries.length > 0 &&
-        <StatusResult playerSummaries={this.state.playerSummaries} steamids={this.state.steamids}/>
+        <StatusResult playerSummaries={this.state.playerSummaries} steamids={this.state.steamids} />
         }
       </div>
     );

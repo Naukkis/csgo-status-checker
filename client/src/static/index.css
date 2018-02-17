@@ -4,12 +4,6 @@ body {
   font-family: sans-serif;
 }
 
-form {
-  display: block;
-  margin: 0 auto;
-  width: 500px;
-}
-
 label {
   display: block;
 	margin: 0 auto;
@@ -49,6 +43,11 @@ p {
   margin: 3px;
 }
 
+th, td {
+    border-bottom: 1px solid #ddd;
+    padding: 5px;
+}
+
 .playersummaries {
   display: block;
   list-style: none;
@@ -68,7 +67,6 @@ p {
   margin-bottom: 0;
 }
 
-
 .flex-container {
   display: flex;
   flex-wrap: wrap;
@@ -81,20 +79,40 @@ p {
 }
 
 .navBar {
-  list-style: none;
+  list-style-type: none;
+  margin: 0 0 15 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
 }
 
+.navBar li {
+  float: left;
+}
 .navBar li a {
   display: block;
   color: white;
-  padding: 8px 16px;
+  text-align: center;
+  padding: 14px 16px;
   text-decoration: none;
-  max-width: 100px;
 }
 
 .navBar li a:hover {
   background-color: #555;
   color: white;
+}
+
+.teammate {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
 }
 
 .App {
