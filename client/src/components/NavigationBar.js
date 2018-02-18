@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 class NavigationBar extends React.Component {
   constructor(props) {
@@ -6,9 +7,18 @@ class NavigationBar extends React.Component {
     this.state = { userID: ''};
   }
 
+  componentWillMount() {
+    axios.get('/user')
+      .then((res) => {
+        localStorage.setItem('userID', res.data.user);
+        this.setState({ userID: res.data.user });
+      })
+      .catch(err => console.log(err));
+  }
+
   render() {
     const loggedin = () => {
-      if (localStorage.getItem('userID') === 'undefined' || localStorage.getItem('userID') === '') return <a href="/login">Login</a>;
+      if (!localStorage.getItem('userID') || localStorage.getItem('userID') === 'undefined' || localStorage.getItem('userID') === '') return <a href="/login">Login</a>;
       return <a href="/logout">Log out</a>;
     };
 

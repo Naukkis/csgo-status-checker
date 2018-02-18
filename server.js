@@ -63,7 +63,8 @@ app.use(morgan('dev'));
 
 app.get('/loggedin', (req, res) => {
   req.session.user_id = req.user.user_id;
-  res.status(200).send('<a href="http://localhost:3000/"> home</a>');
+  res.redirect('/');
+  // res.status(200).send('<a href="http://localhost:3000/"> home</a>');
 });
 
 app.get('/user', (req, res) => {
