@@ -104,13 +104,6 @@ app.get('/getBanned', steamQueries.bannedFriends);
 app.get('/ownedGames', steamQueries.playTime);
 app.get('/:route/', steamQueries.querySelector);
 
-app.get('*', (req, res) => {
-  res.status(404).json({
-    status: 'error',
-    message: 'Not found',
-  });
-});
-
 if (process.env.NODE_ENV === 'production') {
   app.use((err, req, res) => {
     res.status(err.code || 500).json({
