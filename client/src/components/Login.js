@@ -15,7 +15,7 @@ export default class Login extends React.Component {
     return (
     <div>
         <p>Login via Steam OpenID. Your Steam profile ID and display name will be saved on this site.</p>
-        <a href="http://localhost:3001/auth/steam">Login to Steam</a>
+        <a href="/auth/steam">Login to Steam</a>
     </div>
     );
   }

@@ -29,8 +29,8 @@ passport.deserializeUser((user, done) => {
 });
 
 passport.use(new SteamStrategy({
-  returnURL: 'http://localhost:3001/auth/steam/return',
-  realm: 'http://localhost:3001/',
+  returnURL: 'http://pacific-basin-27096.herokuapp.com/auth/steam/return',
+  realm: 'http://pacific-basin-27096.herokuapp.com',
   apiKey: process.env.STEAM_API_KEY,
 }, (identifier, profile, done) => {
   process.nextTick(() => {
