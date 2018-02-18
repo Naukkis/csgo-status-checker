@@ -5,6 +5,7 @@ import StatusInput from './components/StatusInput';
 import MatchContainer from './components/MatchContainer';
 import Logout from './components/Logout';
 import Login from './components/Login';
+import NotFound from './components/NotFound';
 
 // eslint-disable-next-line
 class App extends Component {
@@ -18,6 +19,7 @@ class App extends Component {
           <Route path="/matches" component={MatchContainer} />
           <Route path="/logout" component={Logout} />
           <Route path="/login" component={Login} />
+          <Route component={NotFound} />
         </Switch>
       </div>);
   }
