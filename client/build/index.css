@@ -1,0 +1,103 @@
+body {
+  background: linear-gradient(black, #3b3b3b);
+  color: white;
+  font-family: sans-serif;
+}
+
+form {
+  display: block;
+  margin: 0 auto;
+  width: 500px;
+}
+
+label {
+  display: block;
+	margin: 0 auto;
+}
+
+a {
+color: white;
+text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+textarea {
+  display: block;
+  padding: 2px;
+  width: 500px;
+  height:210px;
+  margin: 0 auto;
+  background: #3b3b3b;
+  color: white;
+}
+
+input[type="submit"] {
+  display: block;
+  margin:0 auto;
+  padding: 5px 20px;
+}
+
+input[type="number"] {
+  color: black;
+  width: 35px;
+}
+
+p {
+  margin: 3px;
+}
+
+.playersummaries {
+  display: block;
+  list-style: none;
+  margin: 0 auto;
+}
+
+.playersummaries li {
+  float: left;
+  width: 250px;
+  margin-bottom: 50px;
+}
+
+.friendsWith li {
+  float: none;
+  width: auto;
+  height: auto;
+  margin-bottom: 0;
+}
+
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.item {
+  min-width: 300px;
+  max-width: 300px;
+  overflow: hidden;
+}
+
+.navBar {
+  list-style: none;
+}
+
+.navBar li a {
+  display: block;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  max-width: 100px;
+}
+
+.navBar li a:hover {
+  background-color: #555;
+  color: white;
+}
+
+.App {
+  margin-top: 1em;
+  padding-bottom: 100%;
+}
