@@ -97,7 +97,7 @@ function addPlayer(steamid64, match_id, team) {
 }
 
 function userSavedMatches(req, res, next) {
-  const userID = req.session.user_id || req.query.q;
+  const userID = req.session.user_id;
   db.any('select * from matches where user_id = $1 order by added_at desc', userID)
     .then((data) => {
       res.status(200).json({
@@ -110,12 +110,15 @@ function userSavedMatches(req, res, next) {
 }
 
 function playersFromMatch(req, res, next) {
-  const { matchID } = req.query.q;
-  db.many('select steamid64, team, player_comment from match_players where match_id = $1', matchID)
+  const matchID = parseInt(req.query.q, 10);
+  db.any('select steamid64, team, player_comment from match_players where match_id = $1', matchID)
     .then((data) => {
+      const team1 = data.filter(player => player.team === 1);
+      const team2 = data.filter(player => player.team === 2);
       res.status(200).json({
         status: 'success',
-        data,
+        team1,
+        team2,
         message: 'Retrieved players from a match',
         time: new Date(),
       });

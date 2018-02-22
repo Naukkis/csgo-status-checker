@@ -4,10 +4,14 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
 const SteamStrategy = require('passport-steam').Strategy;
+const path = require('path');
 const auth = require('./auth');
-const db = require('./queries');
+const dbQuery = require('./queries');
+const db = require('./db');
 const steamQueries = require('./steam-queries');
 
+
+const PGstore = require('connect-pg-simple')(session);
 
 const app = express();
 
@@ -18,18 +22,6 @@ app.use(bodyParser.json());
 
 app.set('port', process.env.PORT || 3001);
 
-/*
-import path from 'path';
-import React from 'react';
-import { renderToString } from 'react-dom/server';
-import { StaticRouter as Router } from 'react-router-dom';
-import App from './client/src/App';
-
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'client', 'src', 'views'));
-
-app.use(express.static(path.join(__dirname, 'client')));
-*/
 passport.serializeUser((user, done) => {
   done(null, user);
 });
@@ -40,21 +32,25 @@ passport.deserializeUser((user, done) => {
 
 passport.use(new SteamStrategy({
   returnURL: 'http://localhost:3001/auth/steam/return',
-  realm: 'http://localhost:3001/',
+  realm: 'http://localhost:3001',
   apiKey: process.env.STEAM_API_KEY,
 }, (identifier, profile, done) => {
   process.nextTick(() => {
-    db.findUser(profile, (err, data) => {
+    dbQuery.findUser(profile, (err, data) => {
       done(err, data);
     });
   });
 }));
 
 app.use(session({
+  store: new PGstore({
+    pgPromise: db,
+  }),
   secret: 'some secret',
   name: 'statuschecker',
   resave: false,
   saveUninitialized: true,
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 },
 }));
 
 app.use(passport.initialize());
@@ -70,6 +66,11 @@ app.use(morgan('dev'));
 app.get('/loggedin', (req, res) => {
   req.session.user_id = req.user.user_id;
   res.redirect('/');
+  // res.status(200).send('<a href="http://localhost:3000/"> home</a>');
+});
+
+app.get('/user', (req, res) => {
+  res.status(200).json({ user: req.session.user_id });
 });
 
 function ensureAuthenticated(req, res, next) {
@@ -86,27 +87,28 @@ app.get('/account', ensureAuthenticated, (req, res) => {
 
 app.get('/logout', (req, res) => {
   req.logout();
-  res.redirect('/logintest');
+  req.session.destroy((err) => {
+    res.redirect('/');
+  });
 });
 
 app.use('/database/add-match', ensureAuthenticated);
 
 app.use('/auth', auth);
-app.get('/database/get-user', db.getUser);
-app.post('/database/create-user', db.createUser);
-app.delete('/database/remove-user', db.removeUser);
-app.post('/database/add-match', db.addMatch);
-app.get('/database/matches', db.userSavedMatches);
+app.get('/database/get-user', dbQuery.getUser);
+app.post('/database/create-user', dbQuery.createUser);
+app.delete('/database/remove-user', dbQuery.removeUser);
+app.post('/database/add-match', dbQuery.addMatch);
+app.get('/database/matches', dbQuery.userSavedMatches);
+app.get('/database/players-from-match', dbQuery.playersFromMatch);
 
 app.get('/getBanned', steamQueries.bannedFriends);
 app.get('/ownedGames', steamQueries.playTime);
 app.get('/:route/', steamQueries.querySelector);
 
-app.get('*', (req, res) => {
-  res.status(404).json({
-    status: 'error',
-    message: 'Not found',
-  });
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -126,5 +128,5 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.listen(app.get('port'), () => {
-  console.log(`Find the server at: http://localhost:${app.get('port')}/`);
+  console.log(`Find the server at: http://localhost:${app.get('port')}/`); // eslint-disable-line no-console
 });

@@ -50,19 +50,16 @@ class StatusResult extends React.Component {
       });
       mates.splice(remove, 1);
     }
-
-    this.setState({ teammates: [...mates] });
+    const opponents = this.props.steamids.filter(x => isTeammate(x, this.state.teammates));
+    this.setState({ teammates: [...mates], opponents: [...opponents] });
   }
 
   saveMatch() {
-    const opponents = this.props.steamids.filter(x => isTeammate(x, this.state.teammates));
-
-    this.setState({ opponents: [...opponents] });
-
-    if (this.state.map === '') {
+    if (this.state.map === 'empty' || this.state.map === '') {
       alert('Pick a map!');
       return;
     }
+
     axios.post('/database/add-match', {
       teammates: this.state.teammates,
       opponents: this.state.opponents,
@@ -71,7 +68,9 @@ class StatusResult extends React.Component {
       map: this.state.map,
     })
       .then((response) => {
-        console.log(response);
+        if(response.data.status === 'success') {
+          alert('Match saved!');
+        }
       })
       .catch((err) => {
         console.log(err);
