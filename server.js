@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
 const SteamStrategy = require('passport-steam').Strategy;
+const path = require('path');
 const auth = require('./auth');
 const dbQuery = require('./queries');
 const { db } = require('./db');
@@ -85,7 +86,7 @@ app.get('/account', ensureAuthenticated, (req, res) => {
 
 app.get('/logout', (req, res) => {
   req.logout();
-  req.session.destroy(function (err) {
+  req.session.destroy((err) => {
     res.redirect('/');
   });
 });
@@ -103,6 +104,11 @@ app.get('/database/players-from-match', dbQuery.playersFromMatch);
 app.get('/getBanned', steamQueries.bannedFriends);
 app.get('/ownedGames', steamQueries.playTime);
 app.get('/:route/', steamQueries.querySelector);
+
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+});
 
 if (process.env.NODE_ENV === 'production') {
   app.use((err, req, res) => {
