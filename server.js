@@ -30,7 +30,7 @@ passport.deserializeUser((user, done) => {
 });
 
 passport.use(new SteamStrategy({
-  returnURL: 'http://csgo-checker.herokuapp.com//auth/steam/return',
+  returnURL: 'http://csgo-checker.herokuapp.com/auth/steam/return',
   realm: 'http://csgo-checker.herokuapp.com/',
   apiKey: process.env.STEAM_API_KEY,
 }, (identifier, profile, done) => {
