@@ -3,10 +3,11 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
+const path = require('path');
 const SteamStrategy = require('passport-steam').Strategy;
 const auth = require('./auth');
 const dbQuery = require('./queries');
-const { db } = require('./db');
+const db = require('./db');
 const steamQueries = require('./steam-queries');
 
 const PGstore = require('connect-pg-simple')(session);
@@ -103,6 +104,10 @@ app.get('/database/players-from-match', dbQuery.playersFromMatch);
 app.get('/getBanned', steamQueries.bannedFriends);
 app.get('/ownedGames', steamQueries.playTime);
 app.get('/:route/', steamQueries.querySelector);
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+});
 
 if (process.env.NODE_ENV === 'production') {
   app.use((err, req, res) => {
