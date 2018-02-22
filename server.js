@@ -7,8 +7,9 @@ const SteamStrategy = require('passport-steam').Strategy;
 const path = require('path');
 const auth = require('./auth');
 const dbQuery = require('./queries');
-const { db } = require('./db');
+const db = require('./db');
 const steamQueries = require('./steam-queries');
+
 
 const PGstore = require('connect-pg-simple')(session);
 
@@ -30,8 +31,8 @@ passport.deserializeUser((user, done) => {
 });
 
 passport.use(new SteamStrategy({
-  returnURL: 'http://pacific-basin-27096.herokuapp.com/auth/steam/return',
-  realm: 'http://pacific-basin-27096.herokuapp.com',
+  returnURL: 'http://localhost:3001/auth/steam/return',
+  realm: 'http://localhost:3001',
   apiKey: process.env.STEAM_API_KEY,
 }, (identifier, profile, done) => {
   process.nextTick(() => {
