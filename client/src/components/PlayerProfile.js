@@ -25,7 +25,7 @@ class PlayerProfile extends React.Component {
     if (publicProfile === 3) {
       apiCalls.playerStats(steamid, data => this.setState({ playerStats: data }));
       apiCalls.CSGOPlayTime(steamid, data => this.setState({ CSGOPlaytime: data }));
-      apiCalls.friendsList(steamid, (data) => {
+      apiCalls.bannedFriendsList(steamid, (data) => {
         apiCalls.checkWhoAreFriends(data, idsToCompare, (friendNames, bannedFriends) => {
           this.setState({ friends: friendNames, bannedFriends });
         });
@@ -36,7 +36,10 @@ class PlayerProfile extends React.Component {
   render() {
     const profileurl = `http://steamcommunity.com/profiles/ ${this.props.playerSummary.steamid}`;
     const divStyle = {
-      backgroundColor: this.props.teammate ? '#8631bf' : 'lightblue',
+      backgroundColor: this.props.teammate ? '#97a8c4' : 'lightblue',
+    };
+    const teamSelector = {
+      buttontext: this.props.teammate ?  'Add to your team' : 'Remove from your team',
     };
 
     return (
@@ -47,7 +50,7 @@ class PlayerProfile extends React.Component {
             alt="avatar"
           />
         </a>
-         <AddTeammate steamid={this.props.playerSummary.steamid} onClick={this.props.onClick} />
+         <AddTeammate steamid={this.props.playerSummary.steamid} onClick={this.props.onClick} text={teamSelector.buttontext} />
         <div>
           {this.state.banStatus.VACBanned ?
           (
