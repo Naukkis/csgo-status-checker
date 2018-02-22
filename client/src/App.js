@@ -17,8 +17,6 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={StatusInput} />
           <Route path="/matches" component={MatchContainer} />
-          <Route path="/logout" component={Logout} />
-          <Route path="/login" component={Login} />
           <Route component={NotFound} />
         </Switch>
       </div>);

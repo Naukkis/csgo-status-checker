@@ -103,7 +103,7 @@ app.get('/database/players-from-match', dbQuery.playersFromMatch);
 
 app.get('/getBanned', steamQueries.bannedFriends);
 app.get('/ownedGames', steamQueries.playTime);
-app.get('/:route/', steamQueries.querySelector);
+app.get('/steam/:route/', steamQueries.querySelector);
 
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));

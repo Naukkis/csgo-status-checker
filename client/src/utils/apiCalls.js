@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 function playerSummaries(steamids, cb) {
-  axios.get(`getPlayerSummary/?q=${steamids}`)
+  axios.get(`steam/getPlayerSummary/?q=${steamids}`)
     .then((response) => {
       cb(response.data.response.players);
     })
@@ -9,7 +9,7 @@ function playerSummaries(steamids, cb) {
 }
 
 function banStatus(steamid, cb) {
-  axios.get(`banStatus/?q=${steamid}`)
+  axios.get(`steam/banStatus/?q=${steamid}`)
     .then((response) => {
       cb(response.data.players[0]);
     })
@@ -43,7 +43,7 @@ function buildQuery(friendList, idsToCompare) {
 function checkWhoAreFriends(friendList, idsToCompare, cb) {
   const friendNames = [];
   const nickQuery = buildQuery(friendList, idsToCompare);
-  axios.get(`getPlayerSummary/?q= ${nickQuery}`)
+  axios.get(`steam/getPlayerSummary/?q= ${nickQuery}`)
     .then((response) => {
       response.data.response.players.forEach((player) => {
         friendNames.push(player.personaname);
@@ -56,7 +56,7 @@ function checkWhoAreFriends(friendList, idsToCompare, cb) {
 }
 
 function friendsList(steamid, cb) {
-  axios.get(`getBanned/?q=${steamid}`)
+  axios.get(`steam/getBanned/?q=${steamid}`)
     .then((response) => {
       cb(response.data);
     })
@@ -66,7 +66,7 @@ function friendsList(steamid, cb) {
 }
 
 function playerStats(steamid, cb) {
-  axios.get(`getPlayerStats/?q=${steamid}`)
+  axios.get(`steam/getPlayerStats/?q=${steamid}`)
     .then((response) => {
       cb(response.data.playerstats.stats);
     })
@@ -76,7 +76,7 @@ function playerStats(steamid, cb) {
 }
 
 function CSGOPlayTime(steamid, cb) {
-  axios.get(`ownedGames/?q=${steamid}`)
+  axios.get(`steam/ownedGames/?q=${steamid}`)
     .then((response) => {
       cb(response.data);
     })

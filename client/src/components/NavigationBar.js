@@ -18,7 +18,7 @@ class NavigationBar extends React.Component {
 
   render() {
     const loggedin = () => {
-      if (!localStorage.getItem('userID') || localStorage.getItem('userID') === 'undefined' || localStorage.getItem('userID') === '') return <a href="/login">Login</a>;
+      if (!localStorage.getItem('userID') || localStorage.getItem('userID') === 'undefined' || localStorage.getItem('userID') === '') return <a href="/auth/steam">Login to Steam</a>;
       return <a href="/logout">Log out</a>;
     };
 
