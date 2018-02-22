@@ -7,7 +7,7 @@ const path = require('path');
 const SteamStrategy = require('passport-steam').Strategy;
 const auth = require('./auth');
 const dbQuery = require('./queries');
-const db = require('./db');
+const { db } = require('./db');
 const steamQueries = require('./steam-queries');
 
 const PGstore = require('connect-pg-simple')(session);
