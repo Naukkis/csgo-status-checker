@@ -45,22 +45,18 @@ function bannedFriends(req, res) {
 }
 
 function playTime(req, res) {
-  let url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=' + apikey + '&steamid=' + req.query.q;
+  const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1?key=${apikey}&format=json&input_json={"steamid":${req.query.q},"appids_filter":[730]}`;
   axios.get(url)
-  .then(function(response) {
-    let csgo = {}
-    if(response.data.response.games) {
-      response.data.response.games.forEach((game) => {
-        if (game.appid === 730) {
-          csgo = game;
-        }
-      })
-    }
-    res.send(csgo);
-  })
-  .catch((error) => {
-    console.log(error);
-  })
+    .then((response) => {
+      if (response.data.response.games) {
+        res.send(response.data.response.games[0]);
+      } else {
+        res.send({ playtime_forever: 0 });
+      }
+    })
+    .catch((error) => {
+      console.log(error.message);
+    })
 }
 
 function querySelector(req, res) {

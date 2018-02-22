@@ -101,8 +101,8 @@ app.post('/database/add-match', dbQuery.addMatch);
 app.get('/database/matches', dbQuery.userSavedMatches);
 app.get('/database/players-from-match', dbQuery.playersFromMatch);
 
-app.get('/getBanned', steamQueries.bannedFriends);
-app.get('/ownedGames', steamQueries.playTime);
+app.get('/steam/getBanned', steamQueries.bannedFriends);
+app.get('/steam/ownedGames', steamQueries.playTime);
 app.get('/steam/:route/', steamQueries.querySelector);
 
 app.get('/*', (req, res) => {

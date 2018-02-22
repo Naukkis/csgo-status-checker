@@ -55,7 +55,7 @@ function checkWhoAreFriends(friendList, idsToCompare, cb) {
     });
 }
 
-function friendsList(steamid, cb) {
+function bannedFriendsList(steamid, cb) {
   axios.get(`steam/getBanned/?q=${steamid}`)
     .then((response) => {
       cb(response.data);
@@ -88,7 +88,7 @@ function CSGOPlayTime(steamid, cb) {
 module.exports = {
   playerSummaries,
   banStatus,
-  friendsList,
+  bannedFriendsList,
   playerStats,
   CSGOPlayTime,
   checkWhoAreFriends,
