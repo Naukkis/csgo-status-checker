@@ -19,6 +19,9 @@ class Teams extends React.Component {
       wordWrap: 'break-word',
     };
 
+    if (!this.props.display) {
+      return null;
+    }
     if (!this.state.playerSummaries) {
       return <td>Loading</td>
     }

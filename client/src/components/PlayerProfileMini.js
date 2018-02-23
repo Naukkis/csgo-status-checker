@@ -26,10 +26,6 @@ class PlayerProfileMini extends React.Component {
 
     return (
       <div style={divStyle}>
-        <img
-            src={this.props.playerSummary.avatarmedium}
-            alt="avatar"
-        />
         <a target="_blank" href={profileurl}> 
           <h6 >{this.props.playerSummary.personaname}</h6>
         </a>
