@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import MatchTable from './MatchTable';
+import hasBeenBanned from '../utils/hasBeenBanned';
 
 class MatchContainer extends React.Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class MatchContainer extends React.Component {
                 const match = matchData;
                 match.team1 = response.data.team1;
                 match.team2 = response.data.team2;
+                match.bannedPlayers = response.data.playerBans.filter((player) => hasBeenBanned(player));
                 const tempState = this.state.matches;
                 tempState.push(match);
                 this.setState({ matches: [...tempState] });

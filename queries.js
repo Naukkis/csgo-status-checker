@@ -1,6 +1,6 @@
 const { db } = require('./db');
 const crypto = require('crypto');
-
+const { playerBanStatus } = require('./utilities');
 
 function getUser(req, res, next) {
   const steamID = req.query.q;
@@ -112,13 +112,17 @@ function userSavedMatches(req, res, next) {
 function playersFromMatch(req, res, next) {
   const matchID = parseInt(req.query.q, 10);
   db.any('select steamid64, team, player_comment from match_players where match_id = $1', matchID)
-    .then((data) => {
+    .then(async (data) => {
+
+      const playerBans = await playerBanStatus(data);
       const team1 = data.filter(player => player.team === 1);
       const team2 = data.filter(player => player.team === 2);
+
       res.status(200).json({
         status: 'success',
         team1,
         team2,
+        playerBans,
         message: 'Retrieved players from a match',
         time: new Date(),
       });

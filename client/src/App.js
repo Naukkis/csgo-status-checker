@@ -3,8 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import NavigationBar from './components/NavigationBar';
 import StatusInput from './components/StatusInput';
 import MatchContainer from './components/MatchContainer';
-import Logout from './components/Logout';
-import Login from './components/Login';
+import MatchPage from './components/MatchPage';
 import NotFound from './components/NotFound';
 
 // eslint-disable-next-line
@@ -16,7 +15,8 @@ class App extends Component {
         <NavigationBar />
         <Switch>
           <Route exact path="/" component={StatusInput} />
-          <Route path="/matches" component={MatchContainer} />
+          <Route exact path="/matches" component={MatchContainer} />
+          <Route path="/matches/:id" component={MatchPage} />
           <Route component={NotFound} />
         </Switch>
       </div>);
