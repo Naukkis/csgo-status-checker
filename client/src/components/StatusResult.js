@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 import PlayerProfile from './PlayerProfile';
 import MapSelector from './MapSelector';
 import ScoreInput from './ScoreInput';
+import MapPicker from './MapPicker';
 
 function isTeammate(playerid, teammates) {
   let filter = false;
@@ -25,14 +27,20 @@ class StatusResult extends React.Component {
         map: '',
         teamScore: 0,
         opponentScore: 0,
+        matchSaved: false,
       };
     this.selectTeam = this.selectTeam.bind(this);
     this.saveMatch = this.saveMatch.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleMapPick = this.handleMapPick.bind(this);
   }
 
   handleChange(e) {
     this.setState({ [e.target.id]: e.target.value });
+  }
+
+  handleMapPick(e) {
+    this.setState({ map: e.target.value });
   }
 
   selectTeam(e) {
@@ -68,8 +76,8 @@ class StatusResult extends React.Component {
       map: this.state.map,
     })
       .then((response) => {
-        if(response.data.status === 'success') {
-          alert('Match saved!');
+        if (response.data.status === 'success') {
+          this.setState({ matchSaved: true })
         }
       })
       .catch((err) => {
@@ -79,11 +87,14 @@ class StatusResult extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="addMatch">
         <button id="saveMatch" onClick={this.saveMatch}>Add match</button>
-        <MapSelector onChange={this.handleChange} />
-        <ScoreInput id="teamScore" onChange={this.handleChange} />
-        <ScoreInput id="opponentScore" onChange={this.handleChange} />
+
+        <h3>Pick a Map</h3>
+        <div className="mapPicker">
+        <MapPicker selected={this.state.map} onChange={this.handleMapPick} />
+        </div>
+
         <div className="flex-container">
         { this.props.playerSummaries.map(data => (
           <span className="item" key={data.steamid}>
@@ -96,6 +107,12 @@ class StatusResult extends React.Component {
           </span>
         ))}
         </div>
+        { this.state.matchSaved && 
+          <Redirect
+            to={{
+              pathname: '/matches',
+            }}
+          />}
       </div>);
   }
 }

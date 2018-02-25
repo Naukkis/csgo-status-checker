@@ -33,7 +33,14 @@ class Teams extends React.Component {
 
     return (
       <td style={tdStyle}>
-        { this.state.banInfo && this.state.playerSummaries.map(player => <PlayerProfileMini key={`profile${player.steamid}}`} playerSummary={player} banInfo={bans(player.steamid)} />) }
+        { this.state.banInfo &&
+          this.state.playerSummaries.map(player =>
+            (<PlayerProfileMini
+              key={`profile${player.steamid}}`}
+              playerSummary={player}
+              banInfo={bans(player.steamid)}
+              matchID={this.props.matchID}
+            />)) }
       </td>);
   }
 }
@@ -42,4 +49,5 @@ export default Teams;
 
 Teams.propTypes = {
   players: PropTypes.array.isRequired,
+  matchID: PropTypes.number.isRequired,
 };

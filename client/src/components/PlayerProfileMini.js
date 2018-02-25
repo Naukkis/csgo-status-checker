@@ -1,23 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import axios from 'axios';
 
 class PlayerProfileMini extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      comment: '', banStatus: {},
+      comment: '',
     };
     this.handleChange = this.handleChange.bind(this);
+    this.save = this.save.bind(this);
   }
-/*
-  componentWillMount() {
-    console.log(this.props.banStatus);
-    this.setState({ banStatus: this.props.banStatus.filter(player => player.SteamId === this.props.playerSummary.steamid) });
-  }
-*/
+
   handleChange(e) {
     this.setState({ comment: e.target.value });
+  }
+
+  save() {
+    axios.put('/database/matches/add-comment', {
+      matchID: this.props.matchID,
+      steamid64: this.props.playerSummary.steamid,
+      comment: this.state.comment,
+    })
+    .then(response => console.log(response.data))
+    .catch(error => console.log(error));
   }
 
   render() {
@@ -47,6 +53,7 @@ class PlayerProfileMini extends React.Component {
             <p style={{ color: 'green' }}>No VAC bans on record</p> }
           <p style={gamebanStyle}>Game Bans: {NumberOfGameBans}</p>
           <input type="text" value={this.state.comment} onChange={this.handleChange} />
+          <button onClick={this.save}>Save</button>
         </div>
       </div>
     );
@@ -54,6 +61,7 @@ class PlayerProfileMini extends React.Component {
 }
 
 PlayerProfileMini.propTypes = {
+  matchID: PropTypes.number.isRequired,
   playerSummary: PropTypes.shape({
     steamid: '',
     personaname: '',

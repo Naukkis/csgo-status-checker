@@ -130,6 +130,32 @@ function playersFromMatch(req, res, next) {
     .catch(error => next(error));
 }
 
+function updateScore(req, res, next) {
+  const { teamScore, opponentScore, matchID } = req.body;
+  db.none('update matches set team_score = $1, opponent_score = $2 where match_id = $3', [teamScore, opponentScore, matchID])
+    .then(() => {
+      res.status(200).json({
+        status: 'success',
+        message: 'updated score',
+        time: new Date(),
+      });
+    })
+    .catch(error => next(error));
+}
+
+function savePlayerComment(req, res, next) {
+  const { comment, matchID, steamid64 } = req.body;
+  db.none('update match_players set player_comment = $1 where match_id = $2 and steamid64 = $3', [comment, matchID, steamid64])
+    .then(() => {
+      res.status(200).json({
+        status: 'success',
+        message: 'added comment',
+        time: new Date(),
+      });
+    })
+    .catch(error => next(error));
+}
+
 module.exports = {
   createUser,
   getUser,
@@ -139,4 +165,6 @@ module.exports = {
   userSavedMatches,
   addPlayerToMatch,
   playersFromMatch,
+  updateScore,
+  savePlayerComment,
 };

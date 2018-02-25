@@ -2,6 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { dateFormat, countDaysSinceToday } from '../utils/dateFormat';
+import cs_agency from '../static/img/maps/cs_agency.jpg';
+import cs_office from '../static/img/maps/cs_office.jpg';
+import de_cache from '../static/img/maps/de_cache.jpg';
+import de_canals from '../static/img/maps/de_canals.jpg';
+import de_cbble from '../static/img/maps/de_cbble.jpg';
+import de_dust2 from '../static/img/maps/de_dust2.jpg';
+import de_inferno from '../static/img/maps/de_inferno.jpg';
+import de_mirage from '../static/img/maps/de_mirage.jpg';
+import de_nuke from '../static/img/maps/de_nuke.jpg';
+import de_overpass from '../static/img/maps/de_overpass.jpg';
+import de_train from '../static/img/maps/de_train.jpg';
 
 class MatchTable extends React.Component {
   render() {
@@ -14,6 +25,19 @@ class MatchTable extends React.Component {
       difference *= -1;
       return `Someone banned ${difference} days before the match`;
     };
+
+    const mapImage = (map) => {
+      let mapImg = null;
+      switch (map) {
+        case 'cs_agency':
+          mapImg = cs_agency;
+          break;
+        case 'cs_office':
+          mapImg = cs_office;
+          break;
+      }
+      return mapImg;
+    }
 
     return (
       <table className="matches">
@@ -34,6 +58,7 @@ class MatchTable extends React.Component {
                 to={{
                   pathname: `/matches/${x.match_id}`,
                   state: {
+                    matchID: x.match_id,
                     team1: x.team1,
                     team2: x.team2,
                     addedAt: x.added_at,
@@ -47,7 +72,7 @@ class MatchTable extends React.Component {
                 { dateFormat(x.added_at)}
               </Link>
             </td>
-            <td>{x.map_played}</td>
+            <td><img src={ mapImage(x.map_played) } alt={x.map_played} /></td>
             <td>{x.team_score}</td>
             <td>{x.opponent_score}</td>
             {x.bannedPlayers.length > 0 &&
