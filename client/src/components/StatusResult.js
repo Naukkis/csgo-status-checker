@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import PlayerProfile from './PlayerProfile';
-import MapSelector from './MapSelector';
-import ScoreInput from './ScoreInput';
 import MapPicker from './MapPicker';
 
 function isTeammate(playerid, teammates) {
