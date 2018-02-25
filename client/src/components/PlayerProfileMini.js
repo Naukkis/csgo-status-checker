@@ -6,7 +6,7 @@ class PlayerProfileMini extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      comment: '',
+      comment: this.props.comment || '',
     };
     this.handleChange = this.handleChange.bind(this);
     this.save = this.save.bind(this);
@@ -73,6 +73,11 @@ PlayerProfileMini.propTypes = {
     NumberOfGameBans: PropTypes.number,
     DaysSinceLastBan: PropTypes.Number,
   }).isRequired,
+  comment: PropTypes.string,
+};
+
+PlayerProfileMini.defaultProps = {
+  comment: '',
 };
 
 export default PlayerProfileMini;

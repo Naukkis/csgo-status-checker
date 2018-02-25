@@ -5,7 +5,7 @@ import Teams from './Teams';
 import { dateFormat } from '../utils/dateFormat';
 
 class MatchPage extends React.Component {
- constructor(props) {
+  constructor(props) {
     super(props);
     this.state =
       {

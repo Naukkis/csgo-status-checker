@@ -98,8 +98,9 @@ function addPlayer(steamid64, match_id, team) {
 
 function userSavedMatches(req, res, next) {
   const userID = req.session.user_id;
-  db.any('select * from matches where user_id = $1 order by added_at desc', userID)
+  db.any('select * from matches where user_id = $1 order by match_id desc', userID)
     .then((data) => {
+      console.log(data);
       res.status(200).json({
         status: 'success',
         data,

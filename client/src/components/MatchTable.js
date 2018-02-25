@@ -35,9 +35,53 @@ class MatchTable extends React.Component {
         case 'cs_office':
           mapImg = cs_office;
           break;
+        case 'de_cache':
+          mapImg = de_cache;
+          break;
+        case 'de_canals':
+          mapImg = de_canals;
+          break;
+        case 'de_cbble':
+          mapImg = de_cbble;
+          break;
+        case 'de_dust2':
+          mapImg = de_dust2;
+          break;
+        case 'de_inferno':
+          mapImg = de_inferno;
+          break;
+        case 'de_mirage':
+          mapImg = de_mirage;
+          break;
+        case 'de_nuke':
+          mapImg = de_nuke;
+          break;
+        case 'de_overpass':
+          mapImg = de_overpass;
+          break;
+        case 'de_train':
+          mapImg = de_train;
+          break;
+        default:
+          mapImg = null;
       }
       return mapImg;
-    }
+    };
+
+    const linkProps = (x) => {
+      return {
+        pathname: `/matches/${x.match_id}`,
+        state: {
+          matchID: x.match_id,
+          team1: x.team1,
+          team2: x.team2,
+          addedAt: x.added_at,
+          map: x.map_played,
+          teamScore: x.team_score,
+          opponentScore: x.opponent_score,
+        },
+      };
+    };
 
     return (
       <table className="matches">
@@ -55,24 +99,20 @@ class MatchTable extends React.Component {
           <tr id={x.match_id} key={`row_${x.match_id}`}>
             <td>
               <Link
-                to={{
-                  pathname: `/matches/${x.match_id}`,
-                  state: {
-                    matchID: x.match_id,
-                    team1: x.team1,
-                    team2: x.team2,
-                    addedAt: x.added_at,
-                    map: x.map_played,
-                    teamScore: x.team_score,
-                    opponentScore: x.opponent_score,
-                  },
-                }}
+                to={linkProps(x)}
                 key={x.match_id}
               >
                 { dateFormat(x.added_at)}
               </Link>
             </td>
-            <td><img src={ mapImage(x.map_played) } alt={x.map_played} /></td>
+            <td>
+              <Link
+                to={linkProps(x)}
+                key={x.match_id}
+              >
+                <img src={ mapImage(x.map_played) } alt={x.map_played} />
+              </Link>
+            </td>
             <td>{x.team_score}</td>
             <td>{x.opponent_score}</td>
             {x.bannedPlayers.length > 0 &&

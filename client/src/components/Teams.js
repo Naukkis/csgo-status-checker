@@ -27,6 +27,11 @@ class Teams extends React.Component {
       }
       return null;
     };
+
+    const playerComment = steamid => (
+      this.props.players.filter(x => x.steamid64 === steamid)[0].player_comment
+    );
+
     if (!this.state.playerSummaries) {
       return <td>Loading</td>;
     }
@@ -40,6 +45,7 @@ class Teams extends React.Component {
               playerSummary={player}
               banInfo={bans(player.steamid)}
               matchID={this.props.matchID}
+              comment={playerComment(player.steamid)}
             />)) }
       </td>);
   }
