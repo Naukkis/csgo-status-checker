@@ -55,6 +55,7 @@ label > input:checked + img  {
 
 p {
   margin: 3px;
+  color: black;
 }
 
 th, td {
@@ -62,20 +63,23 @@ th, td {
     padding: 5px;
 }
 
-.mapPicker {
-  display: block;
-  float: left;
+.App {
+  margin-top: 1em;
+  padding-bottom: 100%;
 }
 
-.playersummaries {
-  list-style: none;
-  margin: 0 auto;
-}
-
-.playersummaries li {
-  float: left;
-  width: 250px;
-  margin-bottom: 50px;
+.btn_Addteammate {
+    position: relative;
+    top: -35px;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
 }
 
 .friendsWith li {
@@ -83,6 +87,7 @@ th, td {
   width: auto;
   height: auto;
   margin-bottom: 0;
+  color: black;
 }
 
 .flex-container {
@@ -96,6 +101,11 @@ th, td {
   overflow: hidden;
 }
 
+.mapPicker {
+  display: block;
+  float: left;
+}
+
 .navBar {
   list-style-type: none;
   margin: 0 0 15 0;
@@ -107,6 +117,7 @@ th, td {
 .navBar li {
   float: left;
 }
+
 .navBar li a {
   display: block;
   color: white;
@@ -120,20 +131,23 @@ th, td {
   color: white;
 }
 
-.teammate {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 15px 5px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
+.playersummaries {
+  list-style: none;
+  margin: 0 auto;
 }
 
-.App {
-  margin-top: 1em;
-  padding-bottom: 100%;
+.playersummaries li {
+  float: left;
+  width: 250px;
+  margin-bottom: 50px;
 }
+
+.stats {
+  color: black;
+  padding: 5px 0 5px 0;
+}
+
+.status {
+  max-width: 500px;
+}
+

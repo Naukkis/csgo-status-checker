@@ -7,7 +7,7 @@ const options = {
 
 const pgp = require('pg-promise')(options);
 
-const connectionString = process.env.DATABASE_URL;
+const connectionString = 'postgres://statuschecker:@:5432/statuschecker';
 const db = pgp(connectionString);
 
 module.exports = { db };

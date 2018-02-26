@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const addTeammate = props => (
   <button
-    className="teammate"
+    className="btn_Addteammate"
     id={props.steamid}
     onClick={props.onClick}
   >

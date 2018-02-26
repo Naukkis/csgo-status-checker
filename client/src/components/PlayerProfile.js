@@ -36,7 +36,8 @@ class PlayerProfile extends React.Component {
   render() {
     const profileurl = `http://steamcommunity.com/profiles/ ${this.props.playerSummary.steamid}`;
     const divStyle = {
-      backgroundColor: this.props.teammate ? '#97a8c4' : 'lightblue',
+      minHeight: 500,
+      backgroundColor: this.props.teammate ? '#eff1f4' : 'lightblue',
     };
     const teamSelector = {
       buttontext: this.props.teammate ?  'Add to your team' : 'Remove from your team',
@@ -44,7 +45,7 @@ class PlayerProfile extends React.Component {
 
     return (
       <div style={divStyle} >
-        <a target="_blank" href={profileurl}> <h3>{this.props.playerSummary.personaname}</h3>
+        <a target="_blank" href={profileurl}> <h3 className="stats">{this.props.playerSummary.personaname}</h3>
           <img
             src={this.props.playerSummary.avatarmedium}
             alt="avatar"
@@ -73,11 +74,11 @@ class PlayerProfile extends React.Component {
                 csgoplaytime={this.state.CSGOPlaytime}
               />
               <Banned bannedFriends={this.state.bannedFriends} />
-              <p>Friends with:</p>
-              <ul className="friendsWith">
-                {this.state.friends.map(friend =>
-                  <li key={friend}> {friend} </li>)}
-              </ul>
+                <p>Friends with:</p>
+                <ul className="friendsWith">
+                  {this.state.friends.map(friend =>
+                    <li key={friend}> {friend} </li>)}
+                </ul>
             </div>
           ) :
             <p>Private Profile</p>

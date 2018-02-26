@@ -26,13 +26,14 @@ class Stats extends React.Component {
     let totalKillsHeadshot;
     this.props.playerStats.forEach((stat) => {
       if (stat.name === 'total_kills') {
-        totalKills = stat.value;
+        totalKills = parseInt(stat.value, 10);
       }
       if (stat.name === 'total_kills_headshot') {
-        totalKillsHeadshot = stat.value;
+        totalKillsHeadshot = parseInt(stat.value, 10);
       }
     });
-    return Number((totalKills / totalKillsHeadshot) * 100).toPrecision(2);
+    console.log();
+    return Number((totalKillsHeadshot / totalKills) * 100).toPrecision(2);
   }
 
   render() {
@@ -42,14 +43,14 @@ class Stats extends React.Component {
     const betterDate = dateCreated.toLocaleDateString();
 
     return (
-      <div>
+      <div className="stats">
         <p>Account created: {betterDate} </p>
         <p>Steamid64: {this.props.playerSummary.steamid}</p>
         <p>Steam play time on record:
           {Math.floor(this.props.csgoplaytime.playtime_forever / 60)}h
         </p>
         <p>Actual time played:  {Math.floor(this.props.playerStats[2].value / 60 / 60)}h </p>
-        <p>Headshot %: { this.HSPercentage } % </p>
+        <p>Headshot %: { this.HSPercentage() } % </p>
         <p>Win %: { this.winPercentage() } %</p>
         <p>
           K/D: { Number(this.props.playerStats[0].value / this.props.playerStats[1].value)
