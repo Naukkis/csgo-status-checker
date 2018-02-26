@@ -30,6 +30,7 @@ passport.deserializeUser((user, done) => {
 });
 
 const authUrl = process.env.NODE_ENV === 'production' ? 'http://csgo-checker.herokuapp.com' : 'http://localhost:3001';
+
 passport.use(new SteamStrategy({
   returnURL: `${authUrl}/auth/steam/return`,
   realm: authUrl,
