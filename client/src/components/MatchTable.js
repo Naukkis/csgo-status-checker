@@ -25,7 +25,7 @@ class MatchTable extends React.Component {
       difference *= -1;
       return `Someone banned ${difference} days before the match`;
     };
-
+    
     const mapImage = (map) => {
       let mapImg = null;
       switch (map) {

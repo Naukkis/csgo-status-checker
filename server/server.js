@@ -103,7 +103,7 @@ app.post('/database/add-match', dbQuery.addMatch);
 app.get('/database/matches', dbQuery.userSavedMatches);
 app.put('/database/matches/add-comment', dbQuery.savePlayerComment);
 app.put('/database/matches/update-score', dbQuery.updateScore);
-
+app.post('/database/previously-played-with', dbQuery.previouslyPlayedWith);
 app.get('/database/players-from-match', dbQuery.playersFromMatch);
 
 app.get('/steam/getBanned', steamQueries.bannedFriends);
@@ -111,7 +111,7 @@ app.get('/steam/ownedGames', steamQueries.playTime);
 app.get('/steam/:route/', steamQueries.querySelector);
 
 app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+  res.sendFile(path.join(__dirname, '../', 'client', 'build', 'index.html'));
 });
 
 if (process.env.NODE_ENV === 'production') {
