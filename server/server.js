@@ -103,7 +103,6 @@ app.post('/database/add-match', dbQuery.addMatch);
 app.get('/database/matches', dbQuery.userSavedMatches);
 app.put('/database/matches/add-comment', dbQuery.savePlayerComment);
 app.put('/database/matches/update-score', dbQuery.updateScore);
-app.post('/database/previously-played-with', dbQuery.previouslyPlayedWith);
 app.get('/database/players-from-match', dbQuery.playersFromMatch);
 
 app.get('/steam/getBanned', steamQueries.bannedFriends);
