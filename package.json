@@ -17,9 +17,9 @@
   },
   "scripts": {
     "start": "concurrently \"npm run serverDev\" \"npm run client\"",
-    "server": "node server.js",
+    "server": "node server/server.js",
     "client": "node start-client.js",
-    "serverDev": "nodemon server.js",
+    "serverDev": "nodemon server/server.js",
     "test": "jasmine",
     "lint": "eslint ."
   },
