@@ -66,12 +66,14 @@ app.use(morgan('dev'));
 
 app.get('/loggedin', (req, res) => {
   req.session.user_id = req.user.user_id;
+  req.session.steamid64 = req.user.steamid64;
   res.redirect('/');
   // res.status(200).send('<a href="http://localhost:3000/"> home</a>');
 });
 
 app.get('/user', (req, res) => {
-  res.status(200).json({ user: req.session.user_id });
+
+  res.status(200).json({ user: req.session.user_id, steamid64: req.session.steamid64 });
 });
 
 function ensureAuthenticated(req, res, next) {
@@ -104,6 +106,7 @@ app.get('/database/matches', dbQuery.userSavedMatches);
 app.put('/database/matches/add-comment', dbQuery.savePlayerComment);
 app.put('/database/matches/update-score', dbQuery.updateScore);
 app.get('/database/players-from-match', dbQuery.playersFromMatch);
+app.post('/database/previously-played-with', dbQuery.previouslyPlayedWith);
 
 app.get('/steam/getBanned', steamQueries.bannedFriends);
 app.get('/steam/ownedGames', steamQueries.playTime);

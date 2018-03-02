@@ -27,7 +27,7 @@ function createUser(user, cb) {
 }
 
 function findUser(user, cb) {
-  db.oneOrNone('select user_id from users where steamid64 = $1', user.id)
+  db.oneOrNone('select user_id, steamid64 from users where steamid64 = $1', user.id)
     .then((data) => {
       if (data) {
         cb(null, data);
@@ -100,7 +100,6 @@ function userSavedMatches(req, res, next) {
   const userID = req.session.user_id;
   db.any('select * from matches where user_id = $1 order by match_id desc', userID)
     .then((data) => {
-      console.log(data);
       res.status(200).json({
         status: 'success',
         data,
@@ -157,6 +156,21 @@ function savePlayerComment(req, res, next) {
     .catch(error => next(error));
 }
 
+function previouslyPlayedWith(req, res, next) {
+  const { steamid64 } = req.body;
+  const playersToSearch = req.body.playersToSearch.split(',');
+  db.any('select match_id from match_players where steamid64 = $1 intersect select match_id from match_players where steamid64 in ($2:csv)', [steamid64, playersToSearch])
+    .then((data) => {
+      res.status(200).json({
+        status: 'success',
+        message: 'Retrieved matches where played with same player',
+        data,
+        time: new Date(),
+      });
+    })
+    .catch(error => next(error));
+}
+
 module.exports = {
   createUser,
   getUser,
@@ -168,4 +182,5 @@ module.exports = {
   playersFromMatch,
   updateScore,
   savePlayerComment,
+  previouslyPlayedWith,
 };
