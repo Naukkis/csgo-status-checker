@@ -23,20 +23,18 @@ class StatusInput extends React.Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault();
     const listOfIds = findSteamID(this.state.value);
     axios.post('/database/previously-played-with', {
       steamid64: localStorage.getItem('steamid64'),
       playersToSearch: listOfIds.query,
     })
-      .then((res) => {
-        this.setState({ previousMatches: res.data });
-      })
+      .then(res => this.setState({ previousMatches: res.data.data }))
       .catch(err => console.log(err));
 
     playerSummaries(listOfIds.query, (data) => {
       this.setState({ playerSummaries: data, steamids: listOfIds.arr });
     });
-    event.preventDefault();
   }
 
   render() {
@@ -50,8 +48,15 @@ class StatusInput extends React.Component {
           </label>
           <input type="submit" value="Submit" />
         </form>
+        {this.state.previousMatches.length > 0 &&
+          <p>You have played some of these players in
+           {this.state.previousMatches.map(x => ` ${x.match_id} `)}
+          </p>}
         {this.state.playerSummaries.length > 0 &&
-          <StatusResult playerSummaries={this.state.playerSummaries} steamids={this.state.steamids} />
+          <StatusResult
+            playerSummaries={this.state.playerSummaries}
+            steamids={this.state.steamids}
+          />
         }
       </div>
     );

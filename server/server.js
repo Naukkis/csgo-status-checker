@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').load();
+}
+
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -47,7 +51,7 @@ app.use(session({
   store: new PGstore({
     pgPromise: db,
   }),
-  secret: 'some secret',
+  secret: process.env.SECRET,
   name: 'statuschecker',
   resave: false,
   saveUninitialized: true,
@@ -72,7 +76,6 @@ app.get('/loggedin', (req, res) => {
 });
 
 app.get('/user', (req, res) => {
-
   res.status(200).json({ user: req.session.user_id, steamid64: req.session.steamid64 });
 });
 
