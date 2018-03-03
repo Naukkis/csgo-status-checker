@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class Stats extends React.Component {
   constructor(props) {
@@ -62,9 +63,9 @@ class Stats extends React.Component {
 }
 
 Stats.propTypes = {
-  playerSummary: React.PropTypes.object.isRequired, // eslint-disable-line
-  csgoplaytime: React.PropTypes.shape({ playtime_forever: '' }).isRequired,
-  playerStats: React.PropTypes.array, // eslint-disable-line
+  playerSummary: PropTypes.object.isRequired, // eslint-disable-line
+  csgoplaytime: PropTypes.shape({ playtime_forever: '' }).isRequired,
+  playerStats: PropTypes.array, // eslint-disable-line
 };
 
 export default Stats;

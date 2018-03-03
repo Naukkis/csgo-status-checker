@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Stats from './Stats';
-import Banned from './Banned';
+import BannedFriends from './BannedFriends';
 import apiCalls from '../utils/apiCalls';
 import AddTeammate from './buttons/AddTeammate';
 
@@ -73,7 +73,7 @@ class PlayerProfile extends React.Component {
                 playerStats={this.state.playerStats}
                 csgoplaytime={this.state.CSGOPlaytime}
               />
-              <Banned bannedFriends={this.state.bannedFriends} />
+              <BannedFriends bannedFriends={this.state.bannedFriends} />
                 <p>Friends with:</p>
                 <ul className="friendsWith">
                   {this.state.friends.map(friend =>

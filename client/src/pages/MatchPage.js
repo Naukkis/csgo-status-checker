@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import Teams from './Teams';
+import Teams from '../components/Teams';
 import { dateFormat } from '../utils/dateFormat';
 
 class MatchPage extends React.Component {

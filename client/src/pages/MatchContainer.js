@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import MatchTable from './MatchTable';
+import MatchTable from '../components/MatchTable';
 import hasBeenBanned from '../utils/hasBeenBanned';
 
 function compareDecending(a, b){

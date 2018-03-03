@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<p
+  style={
+    Object {
+      "color": "red",
+    }
+  }
+>
+  Banned friends: 
+  12
+</p>
+`;

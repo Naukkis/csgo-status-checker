@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import NavigationBar from './components/NavigationBar';
-import StatusInput from './components/StatusInput';
-import MatchContainer from './components/MatchContainer';
-import MatchPage from './components/MatchPage';
-import NotFound from './components/NotFound';
+import StatusInput from './pages/StatusInput';
+import MatchContainer from './pages/MatchContainer';
+import MatchPage from './pages/MatchPage';
+import NotFound from './pages/NotFound';
 
 // eslint-disable-next-line
 class App extends Component {

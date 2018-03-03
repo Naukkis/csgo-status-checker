@@ -60,13 +60,17 @@ class StatusResult extends React.Component {
     this.setState({ teammates: [...mates], opponents: [...opponents] });
   }
 
-  saveMatch() {
+  saveMatch(e) {
+    e.preventDefault();
     if (this.state.map === 'empty' || this.state.map === '') {
-      alert('Pick a map!');
+      this.setState({ error: 'Pick a map first' });
+      setTimeout(() => {
+        this.setState({ error: null });
+      }, 5000);
       return;
     }
 
-    axios.post('/database/add-match', {
+    axios.post('/database/add-matc', {
       teammates: this.state.teammates,
       opponents: this.state.opponents,
       teamScore: this.state.teamScore,
@@ -79,33 +83,38 @@ class StatusResult extends React.Component {
         }
       })
       .catch((err) => {
-        console.log(err);
+        this.setState({ error: 'Match could not be saved, please try again or if problem persists, contact naukkis @ quakenet/ircnet' });
+        setTimeout(() => {
+          this.setState({ error: null });
+        }, 5000);
       });
   }
 
   render() {
+    const errorStyle = { color: 'red', borderStyle: 'solid', borderColor: 'yellow', maxWidth: 200 };
     return (
       <div className="addMatch">
+        {this.state.error && <p style={errorStyle} >{this.state.error} </p>}
         <button id="saveMatch" onClick={this.saveMatch}>Add match</button>
 
         <h3>Pick a Map</h3>
         <div className="mapPicker">
-        <MapPicker selected={this.state.map} onChange={this.handleMapPick} />
+          <MapPicker selected={this.state.map} onChange={this.handleMapPick} />
         </div>
 
         <div className="flex-container">
-        { this.props.playerSummaries.map(data => (
-          <span className="item" key={data.steamid}>
-            <PlayerProfile
-              playerSummary={data}
-              listOfIds={this.props.steamids}
-              onClick={this.selectTeam}
-              teammate={isTeammate(data.steamid, this.state.teammates)}
-            />
-          </span>
-        ))}
+          {this.props.playerSummaries.map(data => (
+            <span className="item" key={data.steamid}>
+              <PlayerProfile
+                playerSummary={data}
+                listOfIds={this.props.steamids}
+                onClick={this.selectTeam}
+                teammate={isTeammate(data.steamid, this.state.teammates)}
+              />
+            </span>
+          ))}
         </div>
-        { this.state.matchSaved && 
+        {this.state.matchSaved &&
           <Redirect
             to={{
               pathname: '/matches',
@@ -114,7 +123,6 @@ class StatusResult extends React.Component {
       </div>);
   }
 }
-
 
 StatusResult.propTypes = {
   playerSummaries: PropTypes.arrayOf(PropTypes.object).isRequired,

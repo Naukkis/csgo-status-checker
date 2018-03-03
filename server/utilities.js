@@ -8,6 +8,12 @@ async function playerBanStatus(match) {
   return result.data.players;
 }
 
+async function friendsList(steamid) {
+  const result = await axios.get(`https://api.steampowered.com/ISteamUser/GetFriendList/v1/?key=${apikey}&steamid=${steamid}`);
+  return result.data;
+}
+
 module.exports = {
   playerBanStatus,
+  friendsList,
 };

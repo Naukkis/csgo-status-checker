@@ -3,5 +3,8 @@ module.exports = {
      "globals": {
       "localStorage": true,
       "document": true
-     }
+     },
+     "rules": {
+        "linebreak-style": 0
+    }
 };

@@ -2,14 +2,9 @@ import React from 'react';
 import axios from 'axios';
 
 class NavigationBar extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentWillMount() {
     axios.get('/user')
       .then((res) => {
-        
         localStorage.setItem('userID', res.data.user);
         localStorage.setItem('steamid64', res.data.steamid64);
       })
