@@ -32,12 +32,12 @@ function splitQueries(data) {
   return queries;
 }
 
-const waitForQueriesToFinish = (createdQueries) => {
-  return Promise.all(createdQueries);
-}
-
 const createPlayerBanQueries = (friendsList) => {
   return splitQueries(friendsList.data).map(query => axios.get(query));
+}
+
+const waitForQueriesToFinish = (createdQueries) => {
+  return Promise.all(createdQueries);
 }
 
 function bannedFriends(req, res) {
@@ -65,4 +65,4 @@ function playTime(req, res) {
 module.exports = {
   bannedFriends,
   playTime,
-}
+};

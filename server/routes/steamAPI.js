@@ -1,5 +1,6 @@
 const express = require('express');
 const axios = require('axios');
+const steamQueries = require('../steam-queries');
 
 const apikey = process.env.STEAM_API_KEY;
 const router = express.Router();
@@ -35,6 +36,8 @@ function querySelector(req, res) {
   }
 }
 
+router.get('/getBanned', steamQueries.playTime);
+router.get('/ownedGames', steamQueries.playTime);
 router.get('/:route', querySelector);
 
 module.exports = router;

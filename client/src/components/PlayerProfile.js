@@ -57,8 +57,8 @@ class PlayerProfile extends React.Component {
           (
             <div>
               <p style={{ color: 'red' }}>VAC BANNED</p>
-              <p>Number of VAC bans: {this.state.banStatus.NumberOfVACBans} </p>
-              <p>Days since last ban: {this.state.banStatus.DaysSinceLastBan} </p>
+              <p style={{ color: 'red' }}>Number of VAC bans: {this.state.banStatus.NumberOfVACBans} </p>
+              <p style={{ color: 'red' }}>Days since last ban: {this.state.banStatus.DaysSinceLastBan} </p>
             </div>
           ) :
             <p style={{ color: 'green' }}>No VAC bans on record</p> }

@@ -10,10 +10,9 @@ const passport = require('passport');
 const path = require('path');
 const SteamStrategy = require('passport-steam').Strategy;
 const auth = require('./routes/auth');
-const steamAPI = require ('./routes/steamAPI');
+const steamAPI = require('./routes/steamAPI');
 const dbQuery = require('./queries');
 const { db } = require('./db');
-const steamQueries = require('./steam-queries');
 
 const PGstore = require('connect-pg-simple')(session);
 
@@ -113,8 +112,7 @@ app.put('/database/matches/update-score', dbQuery.updateScore);
 app.get('/database/players-from-match', dbQuery.playersFromMatch);
 app.post('/database/previously-played-with', dbQuery.previouslyPlayedWith);
 
-app.get('/steam/getBanned', steamQueries.bannedFriends);
-app.get('/steam/ownedGames', steamQueries.playTime);
+app.use('/auth', auth);
 app.use('/steam', steamAPI);
 
 app.get('/*', (req, res) => {

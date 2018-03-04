@@ -44,10 +44,10 @@ class PlayerProfileMini extends React.Component {
         <div>
           {VACBanned ?
           (
-            <div style={{ color: 'red' }}>
-              <p>VAC BANNED</p>
-              <p>Number of VAC bans: {NumberOfVACBans} </p>
-              <p>Days since last ban: {DaysSinceLastBan} </p>
+            <div>
+              <p style={{ color: 'red' }}>VAC BANNED</p>
+              <p style={{ color: 'red' }}>Number of VAC bans: {NumberOfVACBans} </p>
+              <p style={{ color: 'red' }}>Days since last ban: {DaysSinceLastBan} </p>
             </div>
           ) :
             <p style={{ color: 'green' }}>No VAC bans on record</p> }
