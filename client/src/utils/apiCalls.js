@@ -42,20 +42,24 @@ function buildQuery(friendList, idsToCompare) {
 
 function checkWhoAreFriends(friendList, idsToCompare, cb) {
   const friendNames = [];
-  const nickQuery = buildQuery(friendList, idsToCompare);
+
+  const combined = friendList.reduce((prev, curr) => {
+    return prev.concat(curr);
+  });
+  const nickQuery = buildQuery(combined, idsToCompare);
   axios.get(`/steam/getPlayerSummary/?q= ${nickQuery}`)
     .then((response) => {
       response.data.response.players.forEach((player) => {
         friendNames.push(player.personaname);
       });
-      cb(friendNames, countBannedFriends(friendList));
+      cb(friendNames, countBannedFriends(combined));
     })
     .catch((error) => {
       console.log(error);
     });
 }
 
-function bannedFriendsList(steamid, cb) {
+function bannedOnFriendsList(steamid, cb) {
   axios.get(`/steam/getBanned/?q=${steamid}`)
     .then((response) => {
       cb(response.data);
@@ -88,7 +92,7 @@ function CSGOPlayTime(steamid, cb) {
 module.exports = {
   playerSummaries,
   banStatus,
-  bannedFriendsList,
+  bannedOnFriendsList,
   playerStats,
   CSGOPlayTime,
   checkWhoAreFriends,

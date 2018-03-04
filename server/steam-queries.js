@@ -1,47 +1,52 @@
 const axios = require('axios');
-const apikey = process.env.STEAM_API_KEY;
-const getPlayerBans = 'https://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=' + apikey + '&steamids=';
 
-function batchBanned(data) {
-  let apibansquery = getPlayerBans;
-  let queries = [];
-  let friends = 0;
-  data.data.friendslist.friends.forEach(function(id) {
-        apibansquery +=  id.steamid + ",";
-        friends++;
-        if(friends > 99) {
-          queries.push(apibansquery);
-          apibansquery = getPlayerBans;
-          friends = 0;
-        }
-    });
+const apikey = process.env.STEAM_API_KEY;
+
+function splitListToChunks(list) {
+  const chunks = [];
+  for (let i = 0; i < list.length; i += 100) {
+    chunks.push(list.slice(i, i + 100));
+  }
+  return chunks;
+}
+
+function collectSteamIDs(friendslist) {
+  return friendslist.map(friend => friend.steamid);
+}
+
+/*
+  On Steam Web API (atleast on this particular query), maximum amount of IDs per query is 100,
+  so users with more than 100 friends have to be splitted to multiple queries.
+*/
+function splitQueries(data) {
+  const baseURL = `https://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=${apikey}&steamids=`;
+  let apibansquery = baseURL;
+  const queries = [];
+
+  const listOfIDs = collectSteamIDs(data.friendslist.friends);
+  splitListToChunks(listOfIDs).forEach((ids) => {
+    apibansquery += ids.join(',');
     queries.push(apibansquery);
+    apibansquery = baseURL;
+  });
   return queries;
 }
 
+const waitForQueriesToFinish = (createdQueries) => {
+  return Promise.all(createdQueries);
+}
+
+const createPlayerBanQueries = (friendsList) => {
+  return splitQueries(friendsList.data).map(query => axios.get(query));
+}
+
 function bannedFriends(req, res) {
-  let url = 'https://api.steampowered.com/ISteamUser/GetFriendList/v1/?key=' + apikey + '&steamid=' + req.query.q;
-  let axiosPromises = [];
+  const url = `https://api.steampowered.com/ISteamUser/GetFriendList/v1/?key=${apikey}&steamid=${req.query.q}`;
   axios.get(url)
-       .then((response) => {
-          let queries = batchBanned(response);
-          queries.forEach(function (query) {
-            let banQuery = axios.get(query);
-            axiosPromises.push(banQuery);
-          })
-          axios.all(axiosPromises)
-               .then(axios.spread(function (...args) {
-                  let results = [...args];
-                  let complete = [];
-                  results.forEach(function (banInfo) {
-                    complete = [...complete, ...banInfo.data.players];
-                  })
-                  res.send(complete);
-                }))
-        })
-       .catch((err) => {
-          console.log(err);
-        });
+    .then(createPlayerBanQueries)
+    .then(waitForQueriesToFinish)
+    .then(results => res.status(200).json([...results].map(x => x.data.players)))
+    .catch(error => res.status(500).json({ error: 'something went wrong', message: error.message }));
 }
 
 function playTime(req, res) {
@@ -54,45 +59,10 @@ function playTime(req, res) {
         res.send({ playtime_forever: 0 });
       }
     })
-    .catch((error) => {
-      console.log(error.message);
-    })
+    .catch(error => res.status(500).json({ error: error.message }));
 }
-
-function querySelector(req, res) {
-  let url = '';
-  switch(req.params.route) {
-    case 'getFriends':
-      url = 'https://api.steampowered.com/ISteamUser/GetFriendList/v1/?key=' + apikey + '&steamid=' + req.query.q;
-      break;
-    case 'getPlayerSummary':
-      url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=' + apikey + '&steamids=' + req.query.q;
-      break;
-    case 'getPlayerStats':
-      url = 'http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=' + apikey + '&steamid=' + req.query.q;
-      break;
-    case 'recentlyPlayedGames':
-      url ='http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=' + apikey + '&steamid=' + req.query.q;
-      break;
-    case 'banStatus':
-      url = 'https://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=' + apikey + '&steamids='  + req.query.q;
-      break;
-    default:
-      res.send('Not found');
-  }
-
-  axios.get(url)
-    .then(function (response) {
-      res.send(response.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-}
-
 
 module.exports = {
   bannedFriends,
   playTime,
-  querySelector
 }

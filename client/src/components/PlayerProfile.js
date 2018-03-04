@@ -21,11 +21,11 @@ class PlayerProfile extends React.Component {
     const { steamid } = this.props.playerSummary;
     const idsToCompare = this.props.listOfIds;
     const publicProfile = this.props.playerSummary.communityvisibilitystate;
-    apiCalls.banStatus(steamid, data => this.setState({ banStatus: data }));
+    apiCalls.banStatus(steamid, data => this.setState({ banStatus: data[0] }));
     if (publicProfile === 3) {
       apiCalls.playerStats(steamid, data => this.setState({ playerStats: data }));
       apiCalls.CSGOPlayTime(steamid, data => this.setState({ CSGOPlaytime: data }));
-      apiCalls.bannedFriendsList(steamid, (data) => {
+      apiCalls.bannedOnFriendsList(steamid, (data) => {
         apiCalls.checkWhoAreFriends(data, idsToCompare, (friendNames, bannedFriends) => {
           this.setState({ friends: friendNames, bannedFriends });
         });
@@ -51,12 +51,12 @@ class PlayerProfile extends React.Component {
             alt="avatar"
           />
         </a>
-         <AddTeammate steamid={this.props.playerSummary.steamid} onClick={this.props.onClick} text={teamSelector.buttontext} />
+        <AddTeammate steamid={this.props.playerSummary.steamid} onClick={this.props.onClick} text={teamSelector.buttontext} />
         <div>
           {this.state.banStatus.VACBanned ?
           (
-            <div style={{ color: 'red' }}>
-              <p>VAC BANNED</p>
+            <div>
+              <p style={{ color: 'red' }}>VAC BANNED</p>
               <p>Number of VAC bans: {this.state.banStatus.NumberOfVACBans} </p>
               <p>Days since last ban: {this.state.banStatus.DaysSinceLastBan} </p>
             </div>

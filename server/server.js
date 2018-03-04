@@ -9,7 +9,8 @@ const session = require('express-session');
 const passport = require('passport');
 const path = require('path');
 const SteamStrategy = require('passport-steam').Strategy;
-const auth = require('./auth');
+const auth = require('./routes/auth');
+const steamAPI = require ('./routes/steamAPI');
 const dbQuery = require('./queries');
 const { db } = require('./db');
 const steamQueries = require('./steam-queries');
@@ -101,6 +102,7 @@ app.get('/logout', (req, res) => {
 app.use('/database/add-match', ensureAuthenticated);
 
 app.use('/auth', auth);
+
 app.get('/database/get-user', dbQuery.getUser);
 app.post('/database/create-user', dbQuery.createUser);
 app.delete('/database/remove-user', dbQuery.removeUser);
@@ -113,7 +115,7 @@ app.post('/database/previously-played-with', dbQuery.previouslyPlayedWith);
 
 app.get('/steam/getBanned', steamQueries.bannedFriends);
 app.get('/steam/ownedGames', steamQueries.playTime);
-app.get('/steam/:route/', steamQueries.querySelector);
+app.use('/steam', steamAPI);
 
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../', 'client', 'build', 'index.html'));
