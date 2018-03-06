@@ -11,7 +11,7 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/');
 }
 
-// router.use(ensureAuthenticated);
+router.use(ensureAuthenticated);
 
 router.get('/get-user', dbQuery.getUser);
 router.delete('/remove-user', dbQuery.removeUser);
