@@ -95,11 +95,21 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../', 'client', 'build', 'index.html'));
 });
 
-function errorHandler(err, req, res, next) {
-  res.status(500)
-  res.json({ error: err })
+if (process.env.NODE_ENV === 'production') {
+  app.use((err, req, res) => {
+    res.status(err.code || 500).json({
+      status: 'error',
+      message: 'Something went wrong',
+    });
+  });
+} else {
+  app.use((err, req, res) => {
+    res.status(500).json({
+      status: 'error',
+      message: err.message,
+    });
+  });
 }
-app.use(errorHandler);
 
 app.listen(app.get('port'), () => {
   console.log(`Find the server at: http://localhost:${app.get('port')}/`); // eslint-disable-line no-console
