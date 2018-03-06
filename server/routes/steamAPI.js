@@ -36,7 +36,7 @@ function querySelector(req, res) {
   }
 }
 
-router.get('/getBanned', steamQueries.playTime);
+router.get('/getBanned', steamQueries.bannedFriends);
 router.get('/ownedGames', steamQueries.playTime);
 router.get('/:route', querySelector);
 

@@ -42,21 +42,22 @@ function buildQuery(friendList, idsToCompare) {
 
 function checkWhoAreFriends(friendList, idsToCompare, cb) {
   const friendNames = [];
-
   const combined = friendList.reduce((prev, curr) => {
     return prev.concat(curr);
   });
   const nickQuery = buildQuery(combined, idsToCompare);
-  axios.get(`/steam/getPlayerSummary/?q= ${nickQuery}`)
-    .then((response) => {
-      response.data.response.players.forEach((player) => {
-        friendNames.push(player.personaname);
+  if (nickQuery) {
+    axios.get(`/steam/getPlayerSummary/?q= ${nickQuery}`)
+      .then((response) => {
+        response.data.response.players.forEach((player) => {
+          friendNames.push(player.personaname);
+        });
+        cb(friendNames, countBannedFriends(combined));
+      })
+      .catch((error) => {
+        console.log(error);
       });
-      cb(friendNames, countBannedFriends(combined));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  }
 }
 
 function bannedOnFriendsList(steamid, cb) {

@@ -26,7 +26,7 @@ class MatchPage extends React.Component {
   saveChanges() {
     if (this.state.prevState.teamScore !== this.state.teamScore ||
         this.state.prevState.opponentScore !== this.state.opponentScore) {
-      axios.put('/database/matches/update-score', {
+      axios.put('/api/matches/update-score', {
         matchID: this.props.location.state.matchID,
         teamScore: this.state.teamScore,
         opponentScore: this.state.opponentScore,

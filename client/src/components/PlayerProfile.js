@@ -4,6 +4,7 @@ import Stats from './Stats';
 import BannedFriends from './BannedFriends';
 import apiCalls from '../utils/apiCalls';
 import AddTeammate from './buttons/AddTeammate';
+import PreviousMatches from './PreviousMatches';
 
 class PlayerProfile extends React.Component {
   constructor(props) {
@@ -84,6 +85,9 @@ class PlayerProfile extends React.Component {
             <p>Private Profile</p>
             }
         </div>
+        { this.props.previouslyPlayedWith && 
+        <PreviousMatches previouslyPlayedWith={this.props.previouslyPlayedWith} />}
+        
       </div>
     );
   }

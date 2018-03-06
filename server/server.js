@@ -11,10 +11,10 @@ const path = require('path');
 const SteamStrategy = require('passport-steam').Strategy;
 const auth = require('./routes/auth');
 const steamAPI = require('./routes/steamAPI');
-const dbQuery = require('./queries');
-const { db } = require('./db');
-
+const db = require('./db');
+const api = require('./routes/api');
 const PGstore = require('connect-pg-simple')(session);
+const dbQuery = require('./queries');
 
 const app = express();
 
@@ -79,18 +79,6 @@ app.get('/user', (req, res) => {
   res.status(200).json({ user: req.session.user_id, steamid64: req.session.steamid64 });
 });
 
-function ensureAuthenticated(req, res, next) {
-  req.body.userID = req.session.user_id;
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect('/');
-}
-
-app.get('/account', ensureAuthenticated, (req, res) => {
-  res.status(200).json({ user: req.session.user_id });
-});
-
 app.get('/logout', (req, res) => {
   req.logout();
   req.session.destroy((err) => {
@@ -98,20 +86,8 @@ app.get('/logout', (req, res) => {
   });
 });
 
-app.use('/database/add-match', ensureAuthenticated);
-
-app.use('/auth', auth);
-
-app.get('/database/get-user', dbQuery.getUser);
-app.post('/database/create-user', dbQuery.createUser);
-app.delete('/database/remove-user', dbQuery.removeUser);
-app.post('/database/add-match', dbQuery.addMatch);
-app.get('/database/matches', dbQuery.userSavedMatches);
-app.put('/database/matches/add-comment', dbQuery.savePlayerComment);
-app.put('/database/matches/update-score', dbQuery.updateScore);
-app.get('/database/players-from-match', dbQuery.playersFromMatch);
-app.post('/database/previously-played-with', dbQuery.previouslyPlayedWith);
-
+app.post('/api/create-user', dbQuery.createUser);
+app.use('/api', api);
 app.use('/auth', auth);
 app.use('/steam', steamAPI);
 
@@ -119,21 +95,11 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../', 'client', 'build', 'index.html'));
 });
 
-if (process.env.NODE_ENV === 'production') {
-  app.use((err, req, res) => {
-    res.status(err.code || 500).json({
-      status: 'error',
-      message: 'Something went wrong',
-    });
-  });
-} else {
-  app.use((err, req, res) => {
-    res.status(500).json({
-      status: 'error',
-      message: err.message,
-    });
-  });
+function errorHandler(err, req, res, next) {
+  res.status(500)
+  res.render('error', { error: err })
 }
+app.use(errorHandler);
 
 app.listen(app.get('port'), () => {
   console.log(`Find the server at: http://localhost:${app.get('port')}/`); // eslint-disable-line no-console

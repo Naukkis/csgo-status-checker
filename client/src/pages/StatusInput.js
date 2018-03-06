@@ -25,7 +25,7 @@ class StatusInput extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const listOfIds = findSteamID(this.state.value);
-    axios.post('/database/previously-played-with', {
+    axios.post('/api/previously-played-with', {
       steamid64: localStorage.getItem('steamid64'),
       playersToSearch: listOfIds.query,
     })
@@ -56,6 +56,7 @@ class StatusInput extends React.Component {
           <StatusResult
             playerSummaries={this.state.playerSummaries}
             steamids={this.state.steamids}
+            previouslyPlayedWith={this.state.previousMatches}
           />
         }
       </div>

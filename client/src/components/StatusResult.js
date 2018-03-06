@@ -70,7 +70,7 @@ class StatusResult extends React.Component {
       return;
     }
 
-    axios.post('/database/add-matc', {
+    axios.post('/api/add-match', {
       teammates: this.state.teammates,
       opponents: this.state.opponents,
       teamScore: this.state.teamScore,
@@ -91,7 +91,14 @@ class StatusResult extends React.Component {
   }
 
   render() {
+    const previousMatches = (steamid) => {
+      if (this.props.previouslyPlayedWith) {
+        return this.props.previouslyPlayedWith.filter(x => x.steamid64 === steamid);
+      }
+    }
+
     const errorStyle = { color: 'red', borderStyle: 'solid', borderColor: 'yellow', maxWidth: 200 };
+
     return (
       <div className="addMatch">
         {this.state.error && <p style={errorStyle} >{this.state.error} </p>}
@@ -110,6 +117,7 @@ class StatusResult extends React.Component {
                 listOfIds={this.props.steamids}
                 onClick={this.selectTeam}
                 teammate={isTeammate(data.steamid, this.state.teammates)}
+                previouslyPlayedWith={previousMatches(data.steamid)}
               />
             </span>
           ))}
@@ -127,6 +135,7 @@ class StatusResult extends React.Component {
 StatusResult.propTypes = {
   playerSummaries: PropTypes.arrayOf(PropTypes.object).isRequired,
   steamids: PropTypes.arrayOf(PropTypes.string).isRequired,
+  previouslyPlayedWith: PropTypes.array,
 };
 
 export default StatusResult;

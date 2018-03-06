@@ -1,4 +1,4 @@
-const { db } = require('./db');
+const db = require('./db');
 const crypto = require('crypto');
 const { playerBanStatus, friendsList } = require('./utilities');
 
@@ -97,7 +97,7 @@ function addMatch(req, res, next) {
 }
 
 function userSavedMatches(req, res, next) {
-  const userID = req.session.user_id;
+  const userID = req.session.user_id || req.query.q;
   db.any('select * from matches where user_id = $1 order by match_id desc', userID)
     .then((data) => {
       res.status(200).json({
@@ -132,7 +132,7 @@ function playersFromMatch(req, res, next) {
 function updateScore(req, res, next) {
   const { teamScore, opponentScore, matchID } = req.body;
   db.none('update matches set team_score = $1, opponent_score = $2 '
-  + ' where match_id = $3', [teamScore, opponentScore, matchID])
+    + ' where match_id = $3', [teamScore, opponentScore, matchID])
     .then(() => {
       res.status(200).json({
         status: 'success',
@@ -147,7 +147,7 @@ function savePlayerComment(req, res, next) {
   const { comment, matchID, steamid64 } = req.body;
   db.none(
     'update match_players set player_comment = $1'
-  + ' where match_id = $2 and steamid64 = $3',
+    + ' where match_id = $2 and steamid64 = $3',
     [comment, matchID, steamid64]
   )
     .then(() => {
@@ -178,15 +178,38 @@ async function previouslyPlayedWith(req, res, next) {
     !isFriend(player, userFriendslist, steamid64)
   ));
 
-  db.any('select match_id from match_players where steamid64 = $1'
-       + ' intersect'
-       + ' select match_id from match_players where steamid64 in ($2:csv)', [steamid64, friendsFiltered])
+  db.task((t) => {
+    return t.any('select match_id from match_players where steamid64 = $1'
+      + ' intersect'
+      + ' select match_id from match_players where steamid64 in ($2:csv)', [steamid64, friendsFiltered])
+      .then((matchObject) => {       
+        if (matchObject) {
+          const matchIDs = matchObject.map(x => x.match_id);
+          return t.any('select match_id, steamid64 from match_players where match_id in ($1:csv) and steamid64 in ($2:csv)', [matchIDs, friendsFiltered]);
+        }
+        return [];
+      });
+  })
     .then((data) => {
+
       res.status(200).json({
         status: 'success',
         message: 'Retrieved matches where played with same player',
         data,
         time: new Date(),
+      });
+    })
+    .catch(error => next(error));
+}
+
+function matchInfo(req, res, next) {
+  const matchIDs = req.query.q.split(',');
+  db.any('select * from matches where match_id in ($1:csv) order by match_id desc', [matchIDs])
+    .then((data) => {
+      res.status(200).json({
+        status: 'success',
+        data,
+        message: 'Retrieved matchinfo',
       });
     })
     .catch(error => next(error));
@@ -204,4 +227,5 @@ module.exports = {
   updateScore,
   savePlayerComment,
   previouslyPlayedWith,
+  matchInfo,
 };

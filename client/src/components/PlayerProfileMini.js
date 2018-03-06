@@ -17,7 +17,7 @@ class PlayerProfileMini extends React.Component {
   }
 
   save() {
-    axios.put('/database/matches/add-comment', {
+    axios.put('/api/matches/add-comment', {
       matchID: this.props.matchID,
       steamid64: this.props.playerSummary.steamid,
       comment: this.state.comment,
