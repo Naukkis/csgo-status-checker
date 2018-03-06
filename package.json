@@ -13,6 +13,7 @@
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-steam": "^1.0.8",
+    "pg-monitor": "^0.9.0",
     "pg-promise": "^5.9.7",
     "request": "^2.83.0"
   },
