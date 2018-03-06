@@ -97,7 +97,7 @@ app.get('/*', (req, res) => {
 
 function errorHandler(err, req, res, next) {
   res.status(500)
-  res.render('error', { error: err })
+  res.json({ error: err })
 }
 app.use(errorHandler);
 
