@@ -66,6 +66,8 @@ th, td {
 .App {
   margin-top: 1em;
   padding-bottom: 100%;
+  margin-left: 10em;
+  margin-right: 10em;
 }
 
 .btn_Addteammate {
@@ -147,7 +149,4 @@ th, td {
   padding: 5px 0 5px 0;
 }
 
-.status {
-  
-}
 
