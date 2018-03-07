@@ -5,10 +5,10 @@ const router = express.Router();
 
 function ensureAuthenticated(req, res, next) {
   req.body.userID = req.session.user_id;
-  if (req.isAuthenticated()) {
-    return next();
+  if (!req.isAuthenticated()) {
+    res.redirect('/');
   }
-  res.redirect('/');
+  return next();
 }
 
 router.use(ensureAuthenticated);

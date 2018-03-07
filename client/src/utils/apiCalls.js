@@ -47,7 +47,7 @@ function checkWhoAreFriends(friendList, idsToCompare, cb) {
   });
   const nickQuery = buildQuery(combined, idsToCompare);
   if (nickQuery) {
-    axios.get(`/steam/getPlayerSummary/?q= ${nickQuery}`)
+    axios.get(`/steam/getPlayerSummary/?q=${nickQuery}`)
       .then((response) => {
         response.data.response.players.forEach((player) => {
           friendNames.push(player.personaname);

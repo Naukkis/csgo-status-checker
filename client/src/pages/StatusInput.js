@@ -48,7 +48,7 @@ class StatusInput extends React.Component {
           </label>
           <input type="submit" value="Submit" />
         </form>
-        {this.state.previousMatches.length > 0 &&
+        {this.state.previousMatches && this.state.previousMatches.length > 0 &&
           <p>You have played some of these players in
            {this.state.previousMatches.map(x => ` ${x.match_id} `)}
           </p>}

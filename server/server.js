@@ -79,9 +79,10 @@ app.get('/user', (req, res) => {
   res.status(200).json({ user: req.session.user_id, steamid64: req.session.steamid64 });
 });
 
-app.get('/logout', (req, res) => {
+app.get('/logout', (req, res, next) => {
   req.logout();
   req.session.destroy((err) => {
+    if (err) return next(err);
     res.redirect('/');
   });
 });
