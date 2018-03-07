@@ -3,16 +3,6 @@ import axios from 'axios';
 import MatchTablePro from '../components/MatchTablePro';
 import hasBeenBanned from '../utils/hasBeenBanned';
 
-function compare(a, b) {
-  if (a.match_id < b.match_id) {
-    return 1;
-  }
-  if (a.match_id > b.match_id) {
-    return -1;
-  }
-  return 0;
-}
-
 class MatchContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -33,7 +23,7 @@ class MatchContainer extends React.Component {
                 match.bannedPlayers = response.data.playerBans.filter(player => hasBeenBanned(player));
                 const tempState = this.state.matches;
                 tempState.push(match);
-                tempState.sort(compare);
+                tempState.sort((a, b) => b.match_id - a.match_id);
                 this.setState({ matches: [...tempState] });
               })
               .catch(err => console.log(err));
