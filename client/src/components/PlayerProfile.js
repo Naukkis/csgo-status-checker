@@ -86,7 +86,7 @@ class PlayerProfile extends React.Component {
             }
         </div>
         { this.props.previouslyPlayedWith && 
-        <PreviousMatches previouslyPlayedWith={this.props.previouslyPlayedWith} />}
+        <PreviousMatches previouslyPlayedWith={this.props.previouslyPlayedWith} matches={this.props.matches} />}
         
       </div>
     );
@@ -102,10 +102,12 @@ PlayerProfile.propTypes = {
     communityvisibilitystate: '',
   }).isRequired,
   listOfIds: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+  matches: PropTypes.array, // eslint-disable-line react/forbid-prop-types
 };
 
 PlayerProfile.defaultProps = {
   listOfIds: '',
+  matches: [],
 };
 
 export default PlayerProfile;

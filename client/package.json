@@ -24,7 +24,7 @@
     "babel-eslint": "^7.2.3",
     "babel-plugin-transform-class-properties": "6.22.0",
     "material-design-icons": "^3.0.1",
-    "material-ui": "^1.0.0-beta.34",
+    "material-ui": "^1.0.0-beta.36",
     "material-ui-icons": "^1.0.0-beta.17",
     "prop-types": "^15.6.0",
     "ramda": "^0.25.0",
@@ -42,6 +42,8 @@
     "moduleNameMapper": {
       ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "identity-obj-proxy"
     },
-    "setupFiles": ["jest-localstorage-mock"]
+    "setupFiles": [
+      "jest-localstorage-mock"
+    ]
   }
 }

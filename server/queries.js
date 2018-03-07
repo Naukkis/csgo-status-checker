@@ -182,8 +182,8 @@ async function previouslyPlayedWith(req, res, next) {
     return t.any('select match_id from match_players where steamid64 = $1'
       + ' intersect'
       + ' select match_id from match_players where steamid64 in ($2:csv)', [steamid64, friendsFiltered])
-      .then((matchObject) => {       
-        if (matchObject) {
+      .then((matchObject) => {
+        if (matchObject && matchObject.length > 0) {
           const matchIDs = matchObject.map(x => x.match_id);
           return t.any('select match_id, steamid64 from match_players where match_id in ($1:csv) and steamid64 in ($2:csv)', [matchIDs, friendsFiltered]);
         }

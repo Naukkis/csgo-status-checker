@@ -100,6 +100,7 @@ class StatusResult extends React.Component {
     const errorStyle = { color: 'red', borderStyle: 'solid', borderColor: 'yellow', maxWidth: 200 };
 
     return (
+     
       <div className="addMatch">
         {this.state.error && <p style={errorStyle} >{this.state.error} </p>}
         <button id="saveMatch" onClick={this.saveMatch}>Add match</button>
@@ -108,7 +109,6 @@ class StatusResult extends React.Component {
         <div className="mapPicker">
           <MapPicker selected={this.state.map} onChange={this.handleMapPick} />
         </div>
-
         <div className="flex-container">
           {this.props.playerSummaries.map(data => (
             <span className="item" key={data.steamid}>
@@ -118,6 +118,7 @@ class StatusResult extends React.Component {
                 onClick={this.selectTeam}
                 teammate={isTeammate(data.steamid, this.state.teammates)}
                 previouslyPlayedWith={previousMatches(data.steamid)}
+                matches={this.props.matches}
               />
             </span>
           ))}
@@ -136,6 +137,7 @@ StatusResult.propTypes = {
   playerSummaries: PropTypes.arrayOf(PropTypes.object).isRequired,
   steamids: PropTypes.arrayOf(PropTypes.string).isRequired,
   previouslyPlayedWith: PropTypes.array,
+  matches: PropTypes.array,
 };
 
 export default StatusResult;

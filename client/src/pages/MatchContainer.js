@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import MatchTable from '../components/MatchTable';
+import MatchTablePro from '../components/MatchTablePro';
 import hasBeenBanned from '../utils/hasBeenBanned';
 
 function compare(a, b) {
@@ -45,7 +45,7 @@ class MatchContainer extends React.Component {
 
   render() {
     return (
-      <MatchTable matches={this.state.matches} />
+      <MatchTablePro matches={this.state.matches} />
     );
   }
 }

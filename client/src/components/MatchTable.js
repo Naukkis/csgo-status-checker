@@ -49,6 +49,7 @@ class MatchTable extends React.Component {
               <Link
                 to={linkProps(x)}
                 key={x.match_id}
+                href={`/matches/${x.match_id}`}
               >
                 { dateFormat(x.added_at)}
               </Link>
@@ -57,6 +58,7 @@ class MatchTable extends React.Component {
               <Link
                 to={linkProps(x)}
                 key={x.match_id}
+                href={`/matches/${x.match_id}`}
               >
                 <img src={MapImage(x.map_played)} alt={x.map_played} />
               </Link>

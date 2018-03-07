@@ -6,7 +6,7 @@ const options = {
   promiseLib: promise,
 };
 
-//monitor.attach(options);
+// monitor.attach(options);
 const pgp = require('pg-promise')(options);
 
 const connectionString = process.env.DATABASE_URL;
