@@ -41,6 +41,7 @@ class PlayerProfileMini extends React.Component {
         <a target="_blank" href={profileurl}>
           <h6 >{this.props.playerSummary.personaname}</h6>
         </a>
+        <a href={`https://csgo-stats.com/search/${this.props.playerSummary.steamid}`} target="_blank">CS:GO-Stats.com</a>
         <div>
           {VACBanned ?
           (
@@ -54,6 +55,7 @@ class PlayerProfileMini extends React.Component {
           <p style={gamebanStyle}>Game Bans: {NumberOfGameBans}</p>
           <input type="text" value={this.state.comment} onChange={this.handleChange} />
           <button onClick={this.save}>Save</button>
+          
         </div>
       </div>
     );
