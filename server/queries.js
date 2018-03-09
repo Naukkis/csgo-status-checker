@@ -172,7 +172,7 @@ function isFriend(steamid, friends, ownid) {
 }
 
 async function previouslyPlayedWith(req, res, next) {
-  const { steamid64 } = req.body;
+  const { steamid64, userID } = req.body;
   const userFriendslist = await friendsList(steamid64);
   const friendsFiltered = req.body.playersToSearch.split(',').filter(player => (
     !isFriend(player, userFriendslist, steamid64)
@@ -181,7 +181,9 @@ async function previouslyPlayedWith(req, res, next) {
   db.task((t) => {
     return t.any('select match_id from match_players where steamid64 = $1'
       + ' intersect'
-      + ' select match_id from match_players where steamid64 in ($2:csv)', [steamid64, friendsFiltered])
+      + ' select match_id from match_players where steamid64 in ($2:csv)'
+      + ' intersect'
+      + ' select match_id from matches where user_id = $3', [steamid64, friendsFiltered, userID])
       .then((matchObject) => {
         if (matchObject && matchObject.length > 0) {
           const matchIDs = matchObject.map(x => x.match_id);

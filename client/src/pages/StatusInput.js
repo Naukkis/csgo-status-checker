@@ -34,6 +34,7 @@ class StatusInput extends React.Component {
     const listOfIds = findSteamID(this.state.value);
     axios.post('/api/previously-played-with', {
       steamid64: localStorage.getItem('steamid64'),
+      userID: localStorage.getItem('userID'),
       playersToSearch: listOfIds.query,
     })
       .then((res) => {
