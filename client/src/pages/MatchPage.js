@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import Teams from '../components/Teams';
 import { dateFormat } from '../utils/dateFormat';
+import { playerSummaries, banStatus } from '../utils/apiCalls';
 
 class MatchPage extends React.Component {
   constructor(props) {
@@ -11,12 +12,41 @@ class MatchPage extends React.Component {
       {
         prevState: {
           teamScore: this.props.location.state.teamScore,
-          opponentScore: this.props.location.state.opponentScore },
+          opponentScore: this.props.location.state.opponentScore,
+        },
         teamScore: this.props.location.state.teamScore,
         opponentScore: this.props.location.state.opponentScore,
+        team1: [],
+        team2: [],
       };
     this.handleChange = this.handleChange.bind(this);
     this.saveChanges = this.saveChanges.bind(this);
+  }
+
+  componentWillMount() {
+    const ids = [...this.props.location.state.team1.map(x => x.steamid64), ...this.props.location.state.team2.map(x => x.steamid64)];
+    this.setState({listOfIds: ids });
+    playerSummaries(ids, async (summaries) => {
+      const banStatuses = await banStatus(ids);
+      const team1 = this.props.location.state.team1.map((player) => {
+        const combinedInfo = {};
+        combinedInfo.steamid64 = player.steamid64;
+        combinedInfo.match = player;
+        combinedInfo.summary = summaries.filter(x => x.steamid === player.steamid64);
+        combinedInfo.banInfo = banStatuses.data.players.filter(x => x.SteamId === player.steamid64);
+        return combinedInfo;
+      })
+      const team2 = this.props.location.state.team2.map((player) => {
+        const combinedInfo = {};
+        combinedInfo.steamid64 = player.steamid64;
+        combinedInfo.match = player;
+        combinedInfo.summary = summaries.filter(x => x.steamid === player.steamid64);
+        combinedInfo.banInfo = banStatuses.data.players.filter(x => x.SteamId === player.steamid64);
+        return combinedInfo;
+      });
+      this.setState({ team1, team2 });
+    });
+
   }
 
   handleChange(e) {
@@ -25,18 +55,19 @@ class MatchPage extends React.Component {
 
   saveChanges() {
     if (this.state.prevState.teamScore !== this.state.teamScore ||
-        this.state.prevState.opponentScore !== this.state.opponentScore) {
+      this.state.prevState.opponentScore !== this.state.opponentScore) {
       axios.put('/api/matches/update-score', {
         matchID: this.props.location.state.matchID,
         teamScore: this.state.teamScore,
         opponentScore: this.state.opponentScore,
       })
-      .then(response => console.log(response))
-      .catch(error => console.log(error));
+        .then(response => console.log(response))
+        .catch(error => console.log(error));
     }
   }
 
   render() {
+
     const data = this.props.location.state;
     return (
       <div>
@@ -61,8 +92,12 @@ class MatchPage extends React.Component {
               </td>
             </tr>
             <tr>
-              <Teams players={data.team1} matchID={this.props.location.state.matchID} />
-              <Teams players={data.team2} matchID={this.props.location.state.matchID} />
+              {this.state.team1.length > 0 &&
+                <Teams players={this.state.team1} matchID={data.matchID} listOfIds={this.state.listOfIds} />
+              }
+              {this.state.team2.length > 0 &&
+                <Teams players={this.state.team2} matchID={data.matchID} listOfIds={this.state.listOfIds} />
+              }
             </tr>
           </tbody>
         </table>

@@ -38,7 +38,7 @@ class Stats extends React.Component {
   }
 
   render() {
-    const utcSeconds = this.props.playerSummary.timecreated;
+    const utcSeconds = this.props.summary.timecreated;
     const dateCreated = new Date(0);
     dateCreated.setUTCSeconds(utcSeconds);
     const betterDate = dateCreated.toLocaleDateString();
@@ -46,7 +46,7 @@ class Stats extends React.Component {
     return (
       <div className="stats">
         <p>Account created: {betterDate} </p>
-        <p>Steamid64: {this.props.playerSummary.steamid}</p>
+        <p>Steamid64: {this.props.summary.steamid}</p>
         <p>Steam play time on record:
           {Math.floor(this.props.csgoplaytime.playtime_forever / 60)}h
         </p>
@@ -63,7 +63,7 @@ class Stats extends React.Component {
 }
 
 Stats.propTypes = {
-  playerSummary: PropTypes.object.isRequired, // eslint-disable-line
+  summary: PropTypes.object.isRequired, // eslint-disable-line
   csgoplaytime: PropTypes.shape({ playtime_forever: '' }).isRequired,
   playerStats: PropTypes.array, // eslint-disable-line
 };

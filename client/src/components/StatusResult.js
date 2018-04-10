@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
-import PlayerProfile from './PlayerProfile';
+import PlayerProfile2 from './PlayerProfile2';
+import AddTeammate from './buttons/AddTeammate';
 import MapPicker from './MapPicker';
 
 function isTeammate(playerid, teammates) {
@@ -26,6 +27,7 @@ class StatusResult extends React.Component {
         teamScore: 0,
         opponentScore: 0,
         matchSaved: false,
+        match: {},
       };
     this.selectTeam = this.selectTeam.bind(this);
     this.saveMatch = this.saveMatch.bind(this);
@@ -69,6 +71,15 @@ class StatusResult extends React.Component {
       }, 5000);
       return;
     }
+    
+    const match = {
+      team1: this.state.teammates,
+      team2: this.state.opponents,
+      teamScore: this.state.teamScore,
+      opponentScore: this.state.opponentScore,
+      map: this.state.map,
+      added_at: new Date(),
+    }
 
     axios.post('/api/add-match', {
       teammates: this.state.teammates,
@@ -79,7 +90,8 @@ class StatusResult extends React.Component {
     })
       .then((response) => {
         if (response.data.status === 'success') {
-          this.setState({ matchSaved: true })
+          match.matchID = response.data.matchID;
+          this.setState({ matchSaved: true, match: match });
         }
       })
       .catch((err) => {
@@ -90,6 +102,11 @@ class StatusResult extends React.Component {
       });
   }
 
+  teamSelector = (steamid) => {
+    let buttonText = isTeammate(steamid, this.state.teammates) ?  'Add to your team' : 'Remove from your team';
+    return buttonText;
+  };
+
   render() {
     const previousMatches = (steamid) => {
       if (this.props.previouslyPlayedWith) {
@@ -97,10 +114,26 @@ class StatusResult extends React.Component {
       }
     }
 
+    const linkProps = () => {
+      return {
+        pathname: '/matches/',
+        state: {
+          matchID: this.state.match.match_id,
+          team1: this.state.match.team1,
+          team2: this.state.match.team2,
+          addedAt: this.state.match.added_at,
+          map: this.state.match.map_played,
+          teamScore: this.state.match.team_score,
+          opponentScore: this.state.match.opponent_score,
+        },
+      };
+    };
+
+
+
     const errorStyle = { color: 'red', borderStyle: 'solid', borderColor: 'yellow', maxWidth: 200 };
 
     return (
-     
       <div className="addMatch">
         {this.state.error && <p style={errorStyle} >{this.state.error} </p>}
         <button id="saveMatch" onClick={this.saveMatch}>Add match</button>
@@ -112,22 +145,24 @@ class StatusResult extends React.Component {
         <div className="flex-container">
           {this.props.playerSummaries.map(data => (
             <span className="item" key={data.steamid}>
-              <PlayerProfile
-                playerSummary={data}
+              <PlayerProfile2
+                summary={data}
                 listOfIds={this.props.steamids}
-                onClick={this.selectTeam}
-                teammate={isTeammate(data.steamid, this.state.teammates)}
                 previouslyPlayedWith={previousMatches(data.steamid)}
                 matches={this.props.matches}
-              />
+              >
+                <AddTeammate
+                  steamid={data.steamid}
+                  onClick={this.selectTeam}
+                  text={this.teamSelector(data.steamid)}
+                />
+              </PlayerProfile2>
             </span>
           ))}
         </div>
         {this.state.matchSaved &&
           <Redirect
-            to={{
-              pathname: '/matches',
-            }}
+            to={linkProps()}
           />}
       </div>);
   }

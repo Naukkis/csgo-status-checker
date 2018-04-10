@@ -3,6 +3,7 @@ import axios from 'axios';
 import StatusResult from '../components/StatusResult';
 import findSteamID from '../utils/SteamIdConverter';
 import { playerSummaries } from '../utils/apiCalls';
+import StatusInputForm from '../components/StatusInputForm';
 
 class StatusInput extends React.Component {
   constructor(props) {
@@ -49,7 +50,7 @@ class StatusInput extends React.Component {
   }
 
   matchInfo(matches) {
-    if (matches) {
+    if (matches.size > 0) {
       const params = [...matches].join(',');
       axios.get(`/api/matches/info?q=${params}`)
         .then((res) => {
@@ -73,14 +74,7 @@ class StatusInput extends React.Component {
   render() {
     return (
       <div>
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor="status">
-            When in a CS:GO match, type &apos;status&apos; to console. Paste the result here.
-            Single SteamIDs or Steam64IDs work as well.
-             <textarea id="status" value={this.state.value} onChange={this.handleChange} />
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
+        <StatusInputForm handleSubmit={this.handleSubmit} value={this.state.value} handleChange={this.handleChange} />
         {this.state.playerSummaries.length > 0 &&
           <StatusResult
             playerSummaries={this.state.playerSummaries}

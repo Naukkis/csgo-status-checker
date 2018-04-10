@@ -55,7 +55,7 @@ label > input:checked + img  {
 
 p {
   margin: 3px;
-  color: black;
+  color: white;
 }
 
 th, td {
@@ -72,7 +72,6 @@ th, td {
 
 .btn_Addteammate {
     position: relative;
-    top: -35px;
     background-color: #4CAF50;
     border: none;
     color: white;
@@ -89,7 +88,7 @@ th, td {
   width: auto;
   height: auto;
   margin-bottom: 0;
-  color: black;
+  color: white;
 }
 
 .flex-container {
@@ -100,7 +99,6 @@ th, td {
 .item {
   min-width: 300px;
   max-width: 300px;
-  overflow: hidden;
 }
 
 .mapPicker {
@@ -145,7 +143,7 @@ th, td {
 }
 
 .stats {
-  color: black;
+  color: white;
   padding: 5px 0 5px 0;
 }
 

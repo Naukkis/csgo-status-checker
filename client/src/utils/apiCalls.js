@@ -8,14 +8,8 @@ function playerSummaries(steamids, cb) {
     .catch(err => console.log(err));
 }
 
-function banStatus(steamids, cb) {
-  axios.get(`/steam/banStatus/?q=${steamids}`)
-    .then((response) => {
-      cb(response.data.players);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+function banStatus(steamids) {
+  return axios.get(`/steam/banStatus/?q=${steamids}`);
 }
 
 function countBannedFriends(friendList) {

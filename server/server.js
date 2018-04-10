@@ -42,7 +42,9 @@ passport.use(new SteamStrategy({
 }, (identifier, profile, done) => {
   process.nextTick(() => {
     dbQuery.findUser(profile, (err, data) => {
-      done(err, data);
+      if (err) { return done(err); }
+      if (data) { return done(null, data); }
+      return err;
     });
   });
 }));

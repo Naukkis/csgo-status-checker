@@ -132,7 +132,6 @@ class MatchTablePro extends React.Component {
   const bannedAt = (addedAt, daysSinceLastBan) => {
     let difference = countDaysSinceToday(addedAt) - daysSinceLastBan;
     if (difference > 0) {
-      difference *= -1;
       return `Someone banned ${difference} days after the match`;
     }
     difference *= -1;
