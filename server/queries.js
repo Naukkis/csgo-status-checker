@@ -160,6 +160,19 @@ function savePlayerComment(req, res, next) {
     .catch(error => next(error));
 }
 
+function updateMap(req, res, next) {
+  console.log(req.body);
+  db.none('update matches set map_played = $1 where match_id = $2 and user_id = $3', [req.body.mapPlayed, req.body.matchID, req.body.user_id])
+    .then(() => {
+      res.status(200).json({
+        status: 'success',
+        message: 'map updated',
+        time: new Date(),
+      });
+    })
+    .catch(error => next(error));
+}
+
 function isFriend(steamid, friends, ownid) {
   if (ownid === steamid) return true;
   let friend = false;
@@ -230,4 +243,5 @@ module.exports = {
   savePlayerComment,
   previouslyPlayedWith,
   matchInfo,
+  updateMap,
 };

@@ -20,6 +20,7 @@ router.get('/matches', dbQuery.userSavedMatches);
 router.get('/matches/info', dbQuery.matchInfo)
 router.put('/matches/add-comment', dbQuery.savePlayerComment);
 router.put('/matches/update-score', dbQuery.updateScore);
+router.post('/matches/update-map', dbQuery.updateMap);
 router.get('/players-from-match', dbQuery.playersFromMatch);
 router.post('/previously-played-with', dbQuery.previouslyPlayedWith);
 

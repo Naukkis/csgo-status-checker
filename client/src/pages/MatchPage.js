@@ -4,6 +4,7 @@ import axios from 'axios';
 import Teams from '../components/Teams';
 import { dateFormat } from '../utils/dateFormat';
 import { playerSummaries, banStatus } from '../utils/apiCalls';
+import MapSelector from '../components/buttons/MapSelector';
 
 class MatchPage extends React.Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class MatchPage extends React.Component {
         team2: [],
       };
     this.handleChange = this.handleChange.bind(this);
+    this.handleMapChange = this.handleMapChange.bind(this);
     this.saveChanges = this.saveChanges.bind(this);
   }
 
@@ -53,6 +55,18 @@ class MatchPage extends React.Component {
     this.setState({ [e.target.id]: e.target.value });
   }
 
+  handleMapChange(e) {
+    axios.post('/api/matches/update-map',
+      { mapPlayed: e.target.value,
+        matchID: this.props.location.state.matchID,
+        userID: localStorage.getItem('userID')
+      },
+    )
+      .then((res) => {
+      })
+      .catch(err => console.log(err));
+  }
+
   saveChanges() {
     if (this.state.prevState.teamScore !== this.state.teamScore ||
       this.state.prevState.opponentScore !== this.state.opponentScore) {
@@ -67,7 +81,6 @@ class MatchPage extends React.Component {
   }
 
   render() {
-
     const data = this.props.location.state;
     return (
       <div>
@@ -82,7 +95,7 @@ class MatchPage extends React.Component {
           <tbody>
             <tr>
               <td>{dateFormat(data.addedAt)}</td>
-              <td>{data.map}</td>
+              <td><MapSelector onChange={this.handleMapChange} map={data.map} /></td>
               <td><input type="number" id="teamScore" value={this.state.teamScore} onChange={this.handleChange} /> </td>
               <td><input type="number" id="opponentScore" value={this.state.opponentScore} onChange={this.handleChange} /> </td>
               <td>
