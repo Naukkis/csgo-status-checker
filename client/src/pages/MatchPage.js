@@ -27,7 +27,7 @@ class MatchPage extends React.Component {
 
   componentWillMount() {
     const ids = [...this.props.location.state.team1.map(x => x.steamid64), ...this.props.location.state.team2.map(x => x.steamid64)];
-    this.setState({listOfIds: ids });
+    this.setState({ listOfIds: ids });
     playerSummaries(ids, async (summaries) => {
       const banStatuses = await banStatus(ids);
       const team1 = this.props.location.state.team1.map((player) => {
@@ -56,14 +56,14 @@ class MatchPage extends React.Component {
   }
 
   handleMapChange(e) {
-    axios.post('/api/matches/update-map',
-      { mapPlayed: e.target.value,
+    axios.post(
+      '/api/matches/update-map',
+      {
+        mapPlayed: e.target.value,
         matchID: this.props.location.state.matchID,
-        userID: localStorage.getItem('userID')
+        userID: localStorage.getItem('userID'),
       },
     )
-      .then((res) => {
-      })
       .catch(err => console.log(err));
   }
 

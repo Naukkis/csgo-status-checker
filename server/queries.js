@@ -162,7 +162,7 @@ function savePlayerComment(req, res, next) {
 
 function updateMap(req, res, next) {
   console.log(req.body);
-  db.none('update matches set map_played = $1 where match_id = $2 and user_id = $3', [req.body.mapPlayed, req.body.matchID, req.body.user_id])
+  db.none('update matches set map_played = $1 where match_id = $2 and user_id = $3', [req.body.mapPlayed, req.body.matchID, req.body.userID])
     .then(() => {
       res.status(200).json({
         status: 'success',
