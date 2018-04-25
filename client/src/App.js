@@ -1,14 +1,22 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
+import axios from 'axios';
 import NavigationBar from './components/NavigationBar';
-import StatusInput from './components/StatusInput';
-import MatchContainer from './components/MatchContainer';
-import Logout from './components/Logout';
-import Login from './components/Login';
-import NotFound from './components/NotFound';
+import StatusInput from './pages/StatusInput';
+import MatchContainer from './pages/MatchContainer';
+import MatchPage from './pages/MatchPage';
+import NotFound from './pages/NotFound';
 
 // eslint-disable-next-line
 class App extends Component {
+  componentWillMount() {
+    axios.get('/user')
+      .then((res) => {
+        localStorage.setItem('userID', res.data.user);
+        localStorage.setItem('steamid64', res.data.steamid64);
+      })
+      .catch(err => console.log(err));
+  }
 
   render() {
     return (
@@ -16,7 +24,8 @@ class App extends Component {
         <NavigationBar />
         <Switch>
           <Route exact path="/" component={StatusInput} />
-          <Route path="/matches" component={MatchContainer} />
+          <Route exact path="/matches" component={MatchContainer} />
+          <Route path="/matches/:id" component={MatchPage} />
           <Route component={NotFound} />
         </Switch>
       </div>);

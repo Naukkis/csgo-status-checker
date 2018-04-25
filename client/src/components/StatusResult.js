@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 import PlayerProfile from './PlayerProfile';
-import MapSelector from './MapSelector';
-import ScoreInput from './ScoreInput';
+import AddTeammate from './buttons/AddTeammate';
+import MapPicker from './MapPicker';
 
 function isTeammate(playerid, teammates) {
   let filter = false;
@@ -25,14 +26,21 @@ class StatusResult extends React.Component {
         map: '',
         teamScore: 0,
         opponentScore: 0,
+        matchSaved: false,
+        match: {},
       };
     this.selectTeam = this.selectTeam.bind(this);
     this.saveMatch = this.saveMatch.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleMapPick = this.handleMapPick.bind(this);
   }
 
   handleChange(e) {
     this.setState({ [e.target.id]: e.target.value });
+  }
+
+  handleMapPick(e) {
+    this.setState({ map: e.target.value });
   }
 
   selectTeam(e) {
@@ -54,13 +62,26 @@ class StatusResult extends React.Component {
     this.setState({ teammates: [...mates], opponents: [...opponents] });
   }
 
-  saveMatch() {
+  saveMatch(e) {
+    e.preventDefault();
     if (this.state.map === 'empty' || this.state.map === '') {
-      alert('Pick a map!');
+      this.setState({ error: 'Pick a map first' });
+      setTimeout(() => {
+        this.setState({ error: null });
+      }, 5000);
       return;
     }
+    
+    const match = {
+      team1: this.state.teammates,
+      team2: this.state.opponents,
+      teamScore: this.state.teamScore,
+      opponentScore: this.state.opponentScore,
+      map: this.state.map,
+      added_at: new Date(),
+    }
 
-    axios.post('/database/add-match', {
+    axios.post('/api/add-match', {
       teammates: this.state.teammates,
       opponents: this.state.opponents,
       teamScore: this.state.teamScore,
@@ -68,42 +89,90 @@ class StatusResult extends React.Component {
       map: this.state.map,
     })
       .then((response) => {
-        if(response.data.status === 'success') {
-          alert('Match saved!');
+        if (response.data.status === 'success') {
+          match.matchID = response.data.matchID;
+          this.setState({ matchSaved: true, match: match });
         }
       })
       .catch((err) => {
-        console.log(err);
+        this.setState({ error: 'Match could not be saved, please try again or if problem persists, contact naukkis @ quakenet/ircnet' });
+        setTimeout(() => {
+          this.setState({ error: null });
+        }, 5000);
       });
   }
 
+  teamSelector = (steamid) => {
+    let buttonText = isTeammate(steamid, this.state.teammates) ?  'Add to your team' : 'Remove from your team';
+    return buttonText;
+  };
+
   render() {
+    const previousMatches = (steamid) => {
+      if (this.props.previouslyPlayedWith) {
+        return this.props.previouslyPlayedWith.filter(x => x.steamid64 === steamid);
+      }
+    }
+
+    const linkProps = () => {
+      return {
+        pathname: '/matches/',
+        state: {
+          matchID: this.state.match.match_id,
+          team1: this.state.match.team1,
+          team2: this.state.match.team2,
+          addedAt: this.state.match.added_at,
+          map: this.state.match.map_played,
+          teamScore: this.state.match.team_score,
+          opponentScore: this.state.match.opponent_score,
+        },
+      };
+    };
+
+
+
+    const errorStyle = { color: 'red', borderStyle: 'solid', borderColor: 'yellow', maxWidth: 200 };
+
     return (
-      <div>
+      <div className="addMatch">
+        {this.state.error && <p style={errorStyle} >{this.state.error} </p>}
         <button id="saveMatch" onClick={this.saveMatch}>Add match</button>
-        <MapSelector onChange={this.handleChange} />
-        <ScoreInput id="teamScore" onChange={this.handleChange} />
-        <ScoreInput id="opponentScore" onChange={this.handleChange} />
-        <div className="flex-container">
-        { this.props.playerSummaries.map(data => (
-          <span className="item" key={data.steamid}>
-            <PlayerProfile
-              playerSummary={data}
-              listOfIds={this.props.steamids}
-              onClick={this.selectTeam}
-              teammate={isTeammate(data.steamid, this.state.teammates)}
-            />
-          </span>
-        ))}
+
+        <h3>Pick a Map</h3>
+        <div className="mapPicker">
+          <MapPicker selected={this.state.map} onChange={this.handleMapPick} />
         </div>
+        <div className="flex-container">
+          {this.props.playerSummaries.map(data => (
+            <span className="item" key={data.steamid}>
+              <PlayerProfile
+                summary={data}
+                listOfIds={this.props.steamids}
+                previouslyPlayedWith={previousMatches(data.steamid)}
+                matches={this.props.matches}
+              >
+                <AddTeammate
+                  steamid={data.steamid}
+                  onClick={this.selectTeam}
+                  text={this.teamSelector(data.steamid)}
+                />
+              </PlayerProfile>
+            </span>
+          ))}
+        </div>
+        {this.state.matchSaved &&
+          <Redirect
+            to={linkProps()}
+          />}
       </div>);
   }
 }
 
-
 StatusResult.propTypes = {
   playerSummaries: PropTypes.arrayOf(PropTypes.object).isRequired,
   steamids: PropTypes.arrayOf(PropTypes.string).isRequired,
+  previouslyPlayedWith: PropTypes.array,
+  matches: PropTypes.array,
 };
 
 export default StatusResult;

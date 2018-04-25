@@ -1,21 +1,15 @@
 import axios from 'axios';
 
 function playerSummaries(steamids, cb) {
-  axios.get(`steam/getPlayerSummary/?q=${steamids}`)
+  axios.get(`/steam/getPlayerSummary/?q=${steamids}`)
     .then((response) => {
       cb(response.data.response.players);
     })
     .catch(err => console.log(err));
 }
 
-function banStatus(steamid, cb) {
-  axios.get(`steam/banStatus/?q=${steamid}`)
-    .then((response) => {
-      cb(response.data.players[0]);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+function banStatus(steamids) {
+  return axios.get(`/steam/banStatus/?q=${steamids}`);
 }
 
 function countBannedFriends(friendList) {
@@ -42,21 +36,26 @@ function buildQuery(friendList, idsToCompare) {
 
 function checkWhoAreFriends(friendList, idsToCompare, cb) {
   const friendNames = [];
-  const nickQuery = buildQuery(friendList, idsToCompare);
-  axios.get(`steam/getPlayerSummary/?q= ${nickQuery}`)
-    .then((response) => {
-      response.data.response.players.forEach((player) => {
-        friendNames.push(player.personaname);
+  const combined = friendList.reduce((prev, curr) => {
+    return prev.concat(curr);
+  });
+  const nickQuery = buildQuery(combined, idsToCompare);
+  if (nickQuery) {
+    axios.get(`/steam/getPlayerSummary/?q=${nickQuery}`)
+      .then((response) => {
+        response.data.response.players.forEach((player) => {
+          friendNames.push(player.personaname);
+        });
+        cb(friendNames, countBannedFriends(combined));
+      })
+      .catch((error) => {
+        console.log(error);
       });
-      cb(friendNames, countBannedFriends(friendList));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  }
 }
 
-function bannedFriendsList(steamid, cb) {
-  axios.get(`steam/getBanned/?q=${steamid}`)
+function bannedOnFriendsList(steamid, cb) {
+  axios.get(`/steam/getBanned/?q=${steamid}`)
     .then((response) => {
       cb(response.data);
     })
@@ -66,7 +65,7 @@ function bannedFriendsList(steamid, cb) {
 }
 
 function playerStats(steamid, cb) {
-  axios.get(`steam/getPlayerStats/?q=${steamid}`)
+  axios.get(`/steam/getPlayerStats/?q=${steamid}`)
     .then((response) => {
       cb(response.data.playerstats.stats);
     })
@@ -76,7 +75,7 @@ function playerStats(steamid, cb) {
 }
 
 function CSGOPlayTime(steamid, cb) {
-  axios.get(`steam/ownedGames/?q=${steamid}`)
+  axios.get(`/steam/ownedGames/?q=${steamid}`)
     .then((response) => {
       cb(response.data);
     })
@@ -88,7 +87,7 @@ function CSGOPlayTime(steamid, cb) {
 module.exports = {
   playerSummaries,
   banStatus,
-  bannedFriendsList,
+  bannedOnFriendsList,
   playerStats,
   CSGOPlayTime,
   checkWhoAreFriends,

@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<ul
+  className="navBar"
+>
+  <li>
+    <a
+      href="/"
+    >
+      Status Checker
+    </a>
+  </li>
+  <li>
+    <a
+      href="/matches"
+    >
+      Matches
+    </a>
+  </li>
+  <li
+    style={
+      Object {
+        "float": "right",
+      }
+    }
+  >
+    <a
+      href="/logout"
+    >
+      Log out
+    </a>
+  </li>
+</ul>
+`;
+
+exports[`renders correctly with userID 1`] = `
+<ul
+  className="navBar"
+>
+  <li>
+    <a
+      href="/"
+    >
+      Status Checker
+    </a>
+  </li>
+  <li>
+    <a
+      href="/matches"
+    >
+      Matches
+    </a>
+  </li>
+  <li
+    style={
+      Object {
+        "float": "right",
+      }
+    }
+  >
+    <a
+      href="/logout"
+    >
+      Log out
+    </a>
+  </li>
+</ul>
+`;

@@ -1,29 +1,32 @@
 import React from 'react';
-import { playerSummaries } from '../utils/apiCalls';
-import PlayerProfileMini from './PlayerProfileMini';
+import PropTypes from 'prop-types';
+import PlayerProfile from './PlayerProfile';
 
+// eslint-disable-next-line
 class Teams extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { playerSummaries: '' }
-    const ids = this.props.players.map(x => x.steamid64);
-    playerSummaries(ids, (summaries) => {
-      this.setState({ playerSummaries: summaries });
-    });
-  }
-
-
   render() {
     const tdStyle = {
       maxWidth: 400,
       wordWrap: 'break-word',
     };
-
-    if (!this.state.playerSummaries) {
-      return <td>Loading</td>
-    }
-    return <td style={tdStyle}> {this.state.playerSummaries.map(player => <PlayerProfileMini playerSummary={player} />) } </td>
+    return (
+      <td style={tdStyle}>
+        {this.props.players.map(player =>
+          (<PlayerProfile
+            key={`profile${player.steamid64}}`}
+            summary={player.summary[0]}
+            banInfo={player.banInfo[0]}
+            matchID={this.props.matchID}
+            listOfIds={this.props.listOfIds}
+          />))}
+      </td>);
   }
 }
 
 export default Teams;
+
+Teams.propTypes = {
+  players: PropTypes.array.isRequired,
+  matchID: PropTypes.number.isRequired,
+  listOfIds: PropTypes.array.isRequired,
+};

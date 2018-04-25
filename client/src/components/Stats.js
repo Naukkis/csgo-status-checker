@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class Stats extends React.Component {
   constructor(props) {
@@ -26,30 +27,31 @@ class Stats extends React.Component {
     let totalKillsHeadshot;
     this.props.playerStats.forEach((stat) => {
       if (stat.name === 'total_kills') {
-        totalKills = stat.value;
+        totalKills = parseInt(stat.value, 10);
       }
       if (stat.name === 'total_kills_headshot') {
-        totalKillsHeadshot = stat.value;
+        totalKillsHeadshot = parseInt(stat.value, 10);
       }
     });
-    return Number((totalKills / totalKillsHeadshot) * 100).toPrecision(2);
+    console.log();
+    return Number((totalKillsHeadshot / totalKills) * 100).toPrecision(2);
   }
 
   render() {
-    const utcSeconds = this.props.playerSummary.timecreated;
+    const utcSeconds = this.props.summary.timecreated;
     const dateCreated = new Date(0);
     dateCreated.setUTCSeconds(utcSeconds);
     const betterDate = dateCreated.toLocaleDateString();
 
     return (
-      <div>
+      <div className="stats">
         <p>Account created: {betterDate} </p>
-        <p>Steamid64: {this.props.playerSummary.steamid}</p>
+        <p>Steamid64: {this.props.summary.steamid}</p>
         <p>Steam play time on record:
           {Math.floor(this.props.csgoplaytime.playtime_forever / 60)}h
         </p>
         <p>Actual time played:  {Math.floor(this.props.playerStats[2].value / 60 / 60)}h </p>
-        <p>Headshot %: { this.HSPercentage } % </p>
+        <p>Headshot %: { this.HSPercentage() } % </p>
         <p>Win %: { this.winPercentage() } %</p>
         <p>
           K/D: { Number(this.props.playerStats[0].value / this.props.playerStats[1].value)
@@ -61,9 +63,9 @@ class Stats extends React.Component {
 }
 
 Stats.propTypes = {
-  playerSummary: React.PropTypes.object.isRequired, // eslint-disable-line
-  csgoplaytime: React.PropTypes.shape({ playtime_forever: '' }).isRequired,
-  playerStats: React.PropTypes.array, // eslint-disable-line
+  summary: PropTypes.object.isRequired, // eslint-disable-line
+  csgoplaytime: PropTypes.shape({ playtime_forever: '' }).isRequired,
+  playerStats: PropTypes.array, // eslint-disable-line
 };
 
 export default Stats;

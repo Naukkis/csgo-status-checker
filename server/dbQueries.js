@@ -1,9 +1,8 @@
 const { db } = require('./db');
 const crypto = require('crypto');
+const { playerBanStatus } = require('./utilities');
 
-
-function getUser(req, res, next) {
-  const steamID = req.query.q;
+function getUser(steamID) {
   db.one('select * from users where steamid64 = $1', steamID)
     .then((data) => {
       res.status(200).json({
@@ -27,7 +26,7 @@ function createUser(user, cb) {
 }
 
 function findUser(user, cb) {
-  db.oneOrNone('select user_id from users where steamid64 = $1', user.id)
+  db.oneOrNone('select user_id, steamid64 from users where steamid64 = $1', user.id)
     .then((data) => {
       if (data) {
         cb(null, data);
@@ -38,7 +37,7 @@ function findUser(user, cb) {
     .catch(err => cb(err));
 }
 
-function removeUser(req, res, next) {
+function removeUser(SteamID) {
   const steamID = req.query.q;
   db.result('delete from users where steamid64 = $1', steamID).then((result) => {
     res.status(200).json({
@@ -49,7 +48,7 @@ function removeUser(req, res, next) {
     .catch(error => next(error));
 }
 
-function addMatch(req, res, next) {
+function addMatch(matchData) {
   const {
     teammates,
     opponents,
@@ -57,7 +56,7 @@ function addMatch(req, res, next) {
     opponentScore,
     map,
     userID,
-  } = req.body;
+  } = matchData;
 
   db.one(
     'insert into matches(team_score, opponent_score, map_played, user_id, added_at)'
@@ -96,9 +95,9 @@ function addPlayer(steamid64, match_id, team) {
     });
 }
 
-function userSavedMatches(req, res, next) {
+function userSavedMatches(userID) {
   const userID = req.session.user_id;
-  db.any('select * from matches where user_id = $1 order by added_at desc', userID)
+  db.any('select * from matches where user_id = $1 order by match_id desc', userID)
     .then((data) => {
       res.status(200).json({
         status: 'success',
@@ -109,17 +108,60 @@ function userSavedMatches(req, res, next) {
     .catch(error => next(error));
 }
 
-function playersFromMatch(req, res, next) {
+function playersFromMatch(matchID) {
   const matchID = parseInt(req.query.q, 10);
   db.any('select steamid64, team, player_comment from match_players where match_id = $1', matchID)
-    .then((data) => {
+    .then(async (data) => {
+
+      const playerBans = await playerBanStatus(data);
       const team1 = data.filter(player => player.team === 1);
       const team2 = data.filter(player => player.team === 2);
+
       res.status(200).json({
         status: 'success',
         team1,
         team2,
+        playerBans,
         message: 'Retrieved players from a match',
+        time: new Date(),
+      });
+    })
+    .catch(error => next(error));
+}
+
+function updateScore(teamScore, opponentScore, matchID) {
+  const { teamScore, opponentScore, matchID } = req.body;
+  db.none('update matches set team_score = $1, opponent_score = $2 where match_id = $3', [teamScore, opponentScore, matchID])
+    .then(() => {
+      res.status(200).json({
+        status: 'success',
+        message: 'updated score',
+        time: new Date(),
+      });
+    })
+    .catch(error => next(error));
+}
+
+function savePlayerComment(comment, matchID, steamid64) {
+  db.none('update match_players set player_comment = $1 where match_id = $2 and steamid64 = $3', [comment, matchID, steamid64])
+    .then(() => {
+      res.status(200).json({
+        status: 'success',
+        message: 'added comment',
+        time: new Date(),
+      });
+    })
+    .catch(error => next(error));
+}
+
+function previouslyPlayedWith(steamid64, playersToSearchArr) {
+  const playersToSearch = playersToSearchArr.split(',');
+  db.any('select match_id from match_players where steamid64 = $1 intersect select match_id from match_players where steamid64 in ($2:csv)', [steamid64, playersToSearch])
+    .then((data) => {
+      res.status(200).json({
+        status: 'success',
+        message: 'Retrieved matches where played with same player',
+        data,
         time: new Date(),
       });
     })
@@ -135,4 +177,7 @@ module.exports = {
   userSavedMatches,
   addPlayerToMatch,
   playersFromMatch,
+  updateScore,
+  savePlayerComment,
+  previouslyPlayedWith,
 };

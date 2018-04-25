@@ -59,3 +59,7 @@ typings/
 
 # create db script
 create_db.sql
+
+vscode workspace
+*.code-workspace
+.vscode/

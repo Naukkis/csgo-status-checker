@@ -4,29 +4,46 @@
   "private": true,
   "proxy": "http://localhost:3001/",
   "devDependencies": {
-    "enzyme": "2.4.1",
+    "babel-core": "^6.26.0",
+    "babel-jest": "^22.4.1",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.9.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
-    "react-addons-test-utils": "15.4.0",
-    "react-scripts": "0.8.5"
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^22.4.2",
+    "react-scripts": "0.8.5",
+    "react-test-renderer": "^16.2.0",
+    "regenerator-runtime": "^0.11.1"
   },
   "dependencies": {
     "axios": "^0.17.0",
     "babel-eslint": "^7.2.3",
     "babel-plugin-transform-class-properties": "6.22.0",
+    "material-design-icons": "^3.0.1",
+    "material-ui": "^1.0.0-beta.36",
+    "material-ui-icons": "^1.0.0-beta.17",
     "prop-types": "^15.6.0",
     "ramda": "^0.25.0",
-    "react": "^15.4.0",
-    "react-dom": "^15.4.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "jest",
     "eject": "react-scripts eject"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "identity-obj-proxy"
+    },
+    "setupFiles": [
+      "jest-localstorage-mock"
+    ]
   }
 }
