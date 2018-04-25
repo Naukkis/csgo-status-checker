@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
-import PlayerProfile2 from './PlayerProfile2';
+import PlayerProfile from './PlayerProfile';
 import AddTeammate from './buttons/AddTeammate';
 import MapPicker from './MapPicker';
 
@@ -145,7 +145,7 @@ class StatusResult extends React.Component {
         <div className="flex-container">
           {this.props.playerSummaries.map(data => (
             <span className="item" key={data.steamid}>
-              <PlayerProfile2
+              <PlayerProfile
                 summary={data}
                 listOfIds={this.props.steamids}
                 previouslyPlayedWith={previousMatches(data.steamid)}
@@ -156,7 +156,7 @@ class StatusResult extends React.Component {
                   onClick={this.selectTeam}
                   text={this.teamSelector(data.steamid)}
                 />
-              </PlayerProfile2>
+              </PlayerProfile>
             </span>
           ))}
         </div>

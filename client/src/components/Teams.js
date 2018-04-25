@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import PlayerProfile2 from './PlayerProfile2';
+import PlayerProfile from './PlayerProfile';
 
 // eslint-disable-next-line
 class Teams extends React.Component {
@@ -12,7 +12,7 @@ class Teams extends React.Component {
     return (
       <td style={tdStyle}>
         {this.props.players.map(player =>
-          (<PlayerProfile2
+          (<PlayerProfile
             key={`profile${player.steamid64}}`}
             summary={player.summary[0]}
             banInfo={player.banInfo[0]}
