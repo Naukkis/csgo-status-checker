@@ -10,7 +10,7 @@ status
 ```
 Paste the results in the application.
 
-Try it on Heroku: http://csgo-checker.herokuapp.com/
+Try it on Heroku: https://csgo-checker.herokuapp.com/
 
 ### Installation on Raspberry Pi 3, Raspbian Jessie
 Install nodejs:
