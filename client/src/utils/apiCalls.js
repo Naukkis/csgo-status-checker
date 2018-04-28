@@ -1,67 +1,23 @@
 import axios from 'axios';
 
-function playerSummaries(steamids, cb) {
-  axios.get(`/steam/getPlayerSummary/?q=${steamids}`)
-    .then((response) => {
-      cb(response.data.response.players);
-    })
-    .catch(err => console.log(err));
+async function playerSummaries(steamids) {
+  const summaries = await axios.get(`/steam/getPlayerSummary/?q=${steamids}`)
+  return summaries.data.response.players;
 }
 
-function banStatus(steamids) {
-  return axios.get(`/steam/banStatus/?q=${steamids}`);
+async function banStatus(steamids) {
+  const banStatuses = await axios.get(`/steam/banStatus/?q=${steamids}`);
+  return banStatuses.data.players;
 }
 
-function countBannedFriends(friendList) {
-  let bannedFriends = 0;
-  friendList.forEach((player) => {
-    if (player.VACBanned || player.CommunityBanned || player.NumberOfGameBans > 0) {
-      bannedFriends += 1;
-    }
-  });
-  return bannedFriends;
-}
-
-function buildQuery(friendList, idsToCompare) {
-  let query = '';
-  friendList.forEach((player) => {
-    idsToCompare.forEach((id) => {
-      if (id === player.SteamId) {
-        query += `${player.SteamId},`;
-      }
-    });
-  });
-  return query;
-}
-
-function checkWhoAreFriends(friendList, idsToCompare, cb) {
-  const friendNames = [];
-  const combined = friendList.reduce((prev, curr) => {
-    return prev.concat(curr);
-  });
-  const nickQuery = buildQuery(combined, idsToCompare);
-  if (nickQuery) {
-    axios.get(`/steam/getPlayerSummary/?q=${nickQuery}`)
-      .then((response) => {
-        response.data.response.players.forEach((player) => {
-          friendNames.push(player.personaname);
-        });
-        cb(friendNames, countBannedFriends(combined));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+async function getPlayerBansOnFriendList(steamid) {
+  let friendListBanStatuses = {};
+  try {
+    friendListBanStatuses = await axios.get(`/steam/getBanned/?q=${steamid}`);
+  } catch (err) {
+    return err;
   }
-}
-
-function bannedOnFriendsList(steamid, cb) {
-  axios.get(`/steam/getBanned/?q=${steamid}`)
-    .then((response) => {
-      cb(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  return friendListBanStatuses.data;
 }
 
 function playerStats(steamid, cb) {
@@ -84,10 +40,63 @@ function CSGOPlayTime(steamid, cb) {
     });
 }
 
+function checkWhoAreFriends(friendList, playerIDsFromMatch, cb) {
+  const friendNames = [];
+  // people with >100 friends are returned in list of lists
+  const friends = flattenFriendlist(friendList);
+  const nickQuery = buildQuery(friends, playerIDsFromMatch);
+  if (nickQuery) {
+    axios.get(`/steam/getPlayerSummary/?q=${nickQuery}`)
+      .then((response) => {
+        response.data.response.players.forEach((player) => {
+          friendNames.push(player.personaname);
+        });
+        cb(friendNames, countBannedFriends(friends));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+}
+
+function flattenFriendlist(friends) {
+  let flatFriendList = [];
+  if (friends.length > 1) {
+    flatFriendList = friends.reduce((prev, curr) => {
+      return prev.concat(curr);
+    });
+  } else {
+    flatFriendList = friends;
+  }
+  return flatFriendList;
+}
+
+function buildQuery(friendList, playerIDsFromMatch) {
+  let query = '';
+  friendList.forEach((player) => {
+    playerIDsFromMatch.forEach((id) => {
+      if (id === player.SteamId) {
+        query += `${player.SteamId},`;
+      }
+    });
+  });
+  return query;
+}
+
+function countBannedFriends(friendList) {
+  let bannedFriends = 0;
+  friendList.forEach((player) => {
+    if (player.VACBanned || player.CommunityBanned || player.NumberOfGameBans > 0) {
+      bannedFriends += 1;
+    }
+  });
+  return bannedFriends;
+}
+
 module.exports = {
   playerSummaries,
   banStatus,
-  bannedOnFriendsList,
+  getPlayerBansOnFriendList,
   playerStats,
   CSGOPlayTime,
   checkWhoAreFriends,

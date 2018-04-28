@@ -33,6 +33,7 @@ class StatusResult extends React.Component {
     this.saveMatch = this.saveMatch.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleMapPick = this.handleMapPick.bind(this);
+    console.log(this.props);
   }
 
   handleChange(e) {
@@ -129,8 +130,6 @@ class StatusResult extends React.Component {
       };
     };
 
-
-
     const errorStyle = { color: 'red', borderStyle: 'solid', borderColor: 'yellow', maxWidth: 200 };
 
     return (
@@ -150,6 +149,7 @@ class StatusResult extends React.Component {
                 listOfIds={this.props.steamids}
                 previouslyPlayedWith={previousMatches(data.steamid)}
                 matches={this.props.matches}
+                banInfo={this.props.banStatuses.filter(x => x.SteamId === data.steamid)[0]}
               >
                 <AddTeammate
                   steamid={data.steamid}
@@ -171,8 +171,9 @@ class StatusResult extends React.Component {
 StatusResult.propTypes = {
   playerSummaries: PropTypes.arrayOf(PropTypes.object).isRequired,
   steamids: PropTypes.arrayOf(PropTypes.string).isRequired,
-  previouslyPlayedWith: PropTypes.array,
-  matches: PropTypes.array,
+  previouslyPlayedWith: PropTypes.array.isRequired,
+  matches: PropTypes.array.isRequired,
+  banStatuses: PropTypes.array.isRequired,
 };
 
 export default StatusResult;

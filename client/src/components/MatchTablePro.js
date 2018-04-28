@@ -23,19 +23,19 @@ const actionsStyles = theme => ({
 });
 
 class TablePaginationActions extends React.Component {
-  handleFirstPageButtonClick = event => {
+  handleFirstPageButtonClick = (event) => {
     this.props.onChangePage(event, 0);
   };
 
-  handleBackButtonClick = event => {
+  handleBackButtonClick = (event) => {
     this.props.onChangePage(event, this.props.page - 1);
   };
 
-  handleNextButtonClick = event => {
+  handleNextButtonClick = (event) => {
     this.props.onChangePage(event, this.props.page + 1);
   };
 
-  handleLastPageButtonClick = event => {
+  handleLastPageButtonClick = (event) => {
     this.props.onChangePage(
       event,
       Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1),
@@ -43,7 +43,9 @@ class TablePaginationActions extends React.Component {
   };
 
   render() {
-    const { classes, count, page, rowsPerPage, theme } = this.props;
+    const {
+ classes, count, page, rowsPerPage, theme 
+} = this.props;
 
     return (
       <div className={classes.root}>
@@ -89,9 +91,7 @@ TablePaginationActions.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: true })(
-  TablePaginationActions,
-);
+const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: true })(TablePaginationActions,);
 
 const styles = theme => ({
   root: {
@@ -100,7 +100,7 @@ const styles = theme => ({
   },
   table: {
     minWidth: 500,
-    backgroundColor: grey['300']
+    backgroundColor: grey['300'],
   },
   tableWrapper: {
     overflowX: 'auto',
@@ -110,7 +110,7 @@ const styles = theme => ({
 class MatchTablePro extends React.Component {
   constructor(props, context) {
     super(props, context);
-    
+
     this.state = {
       page: 0,
       rowsPerPage: 5,
@@ -121,25 +121,24 @@ class MatchTablePro extends React.Component {
     this.setState({ page });
   };
 
-  handleChangeRowsPerPage = event => {
+  handleChangeRowsPerPage = (event) => {
     this.setState({ rowsPerPage: event.target.value });
   };
 
   render() {
-  const { classes } = this.props;
-  const { rowsPerPage, page } = this.state;
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, this.props.matches.length - page * rowsPerPage);
-  const bannedAt = (addedAt, daysSinceLastBan) => {
-    let difference = countDaysSinceToday(addedAt) - daysSinceLastBan;
-    if (difference > 0) {
-      return `Someone banned ${difference} days after the match`;
-    }
-    difference *= -1;
-    return `Someone banned ${difference} days before the match`;
-  };
+    const { classes } = this.props;
+    const { rowsPerPage, page } = this.state;
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, this.props.matches.length - page * rowsPerPage);
+    const bannedAt = (addedAt, daysSinceLastBan) => {
+      let difference = countDaysSinceToday(addedAt) - daysSinceLastBan;
+      if (difference > 0) {
+        return `Someone banned ${difference} days after the match`;
+      }
+      difference *= -1;
+      return `Someone banned ${difference} days before the match`;
+    };
 
-  const linkProps = (x) => {
-    return {
+    const linkProps = (x) => ({
       pathname: `/matches/${x.match_id}`,
       state: {
         matchID: x.match_id,
@@ -150,24 +149,22 @@ class MatchTablePro extends React.Component {
         teamScore: x.team_score,
         opponentScore: x.opponent_score,
       },
-    };
-  };
+    });
 
 
-  return (
+    return (
     <Paper className={classes.root}>
-    <div className={classes.tableWrapper} style={{backgroundColor: grey['400'] }}>
-    <Typography variant="title">Matches</Typography>
+      <div className={classes.tableWrapper} style={{ backgroundColor: grey['400'] }}>
+      <Typography variant="title">Matches</Typography>
       <Table className={classes.table}>
         <TableBody>
-        <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Map</TableCell>
-            <TableCell>Score</TableCell>
-            <TableCell numeric>Bans</TableCell>
-          </TableRow>
-          {this.props.matches.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(m => {
-                return (
+          <TableRow>
+          <TableCell>Date</TableCell>
+          <TableCell>Map</TableCell>
+          <TableCell>Score</TableCell>
+          <TableCell numeric>Bans</TableCell>
+        </TableRow>
+          {this.props.matches.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((m) => (
                   <TableRow key={m.match_id}>
                     <TableCell style={{ paddingRight: 0 }}>
                       <Link
@@ -192,16 +189,15 @@ class MatchTablePro extends React.Component {
                     {m.bannedPlayers.length > 0 &&
                     <TableCell numeric>{ bannedAt(m.added_at, m.bannedPlayers[0].DaysSinceLastBan) }</TableCell> }
                   </TableRow>
-                );
-              })}
-              {emptyRows > 0 && (
+                ))}
+          {emptyRows > 0 && (
                 <TableRow style={{ height: 49 * emptyRows }}>
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
         </TableBody>
         <TableFooter>
-              <TableRow>
+          <TableRow>
                 <TablePagination
                   colSpan={3}
                   count={this.props.matches.length}
@@ -212,12 +208,12 @@ class MatchTablePro extends React.Component {
                   Actions={TablePaginationActionsWrapped}
                 />
               </TableRow>
-            </TableFooter>
-          </Table>
-      </div>
+        </TableFooter>
+      </Table>
+    </div>
     </Paper>
-  );
-}
+    );
+  }
 }
 
 MatchTablePro.propTypes = {

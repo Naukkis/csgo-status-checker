@@ -2,10 +2,10 @@ import React from 'react';
 import axios from 'axios';
 import StatusResult from '../components/StatusResult';
 import findSteamID from '../utils/SteamIdConverter';
-import { playerSummaries } from '../utils/apiCalls';
+import { playerSummaries, banStatus } from '../utils/apiCalls';
 import StatusInputForm from '../components/StatusInputForm';
 
-class StatusInput extends React.Component {
+class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,6 +14,7 @@ class StatusInput extends React.Component {
       steamids: [],
       previousMatches: [],
       matches: [],
+      banStatuses: [],
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -24,12 +25,12 @@ class StatusInput extends React.Component {
     this.setState({ value: event.target.value });
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     const queryReducer = (previousMatches) => {
       const idset = new Set();
       previousMatches.forEach(x => idset.add(x.match_id));
       return idset;
-    }
+    };
 
     event.preventDefault();
     const listOfIds = findSteamID(this.state.value);
@@ -44,9 +45,9 @@ class StatusInput extends React.Component {
       })
       .catch(err => console.log(err));
 
-    playerSummaries(listOfIds.query, (data) => {
-      this.setState({ playerSummaries: data, steamids: listOfIds.arr });
-    });
+    const summaries = await playerSummaries(listOfIds.query);
+    const banStatuses = await banStatus(listOfIds.query);
+    this.setState({ playerSummaries: summaries, steamids: listOfIds.arr, banStatuses });
   }
 
   matchInfo(matches) {
@@ -74,13 +75,18 @@ class StatusInput extends React.Component {
   render() {
     return (
       <div>
-        <StatusInputForm handleSubmit={this.handleSubmit} value={this.state.value} handleChange={this.handleChange} />
+        <StatusInputForm
+          handleSubmit={this.handleSubmit}
+          value={this.state.value}
+          handleChange={this.handleChange}
+        />
         {this.state.playerSummaries.length > 0 &&
           <StatusResult
             playerSummaries={this.state.playerSummaries}
             steamids={this.state.steamids}
             matches={this.state.matches}
             previouslyPlayedWith={this.state.previousMatches}
+            banStatuses={this.state.banStatuses}
           />
         }
       </div>
@@ -88,4 +94,4 @@ class StatusInput extends React.Component {
   }
 }
 
-export default StatusInput;
+export default Main;

@@ -11,10 +11,10 @@ const banInfo = (props) => {
             <p style={{ color: 'red' }}>Days since last ban: {props.DaysSinceLastBan} </p>
           </div>
         ) :
-        <p style={{ color: 'green' }}>No VAC bans on record</p>}
+          <p style={{ color: 'green' }}>No VAC bans on record</p>}
       <p>Number of Game Bans: {props.NumberOfGameBans}</p>
     </div>
-  )
-}
+  );
+};
 
 export default banInfo;
