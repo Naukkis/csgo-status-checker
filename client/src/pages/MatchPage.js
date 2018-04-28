@@ -25,30 +25,30 @@ class MatchPage extends React.Component {
     this.saveChanges = this.saveChanges.bind(this);
   }
 
-  componentWillMount() {
-    const ids = [...this.props.location.state.team1.map(x => x.steamid64), ...this.props.location.state.team2.map(x => x.steamid64)];
+  async componentWillMount() {
+    const ids = [
+      ...this.props.location.state.team1.map(x => x.steamid64),
+      ...this.props.location.state.team2.map(x => x.steamid64),
+    ];
+
     this.setState({ listOfIds: ids });
-    playerSummaries(ids, async (summaries) => {
-      const banStatuses = await banStatus(ids);
-      const team1 = this.props.location.state.team1.map((player) => {
+    const summaries = await playerSummaries(ids);
+    const banStatuses = await banStatus(ids);
+
+    const combineTeamInfo = (team) => {
+      return team.map((player) => {
         const combinedInfo = {};
         combinedInfo.steamid64 = player.steamid64;
         combinedInfo.match = player;
         combinedInfo.summary = summaries.filter(x => x.steamid === player.steamid64);
-        combinedInfo.banInfo = banStatuses.data.players.filter(x => x.SteamId === player.steamid64);
-        return combinedInfo;
-      })
-      const team2 = this.props.location.state.team2.map((player) => {
-        const combinedInfo = {};
-        combinedInfo.steamid64 = player.steamid64;
-        combinedInfo.match = player;
-        combinedInfo.summary = summaries.filter(x => x.steamid === player.steamid64);
-        combinedInfo.banInfo = banStatuses.data.players.filter(x => x.SteamId === player.steamid64);
+        combinedInfo.banInfo = banStatuses.filter(x => x.SteamId === player.steamid64);
         return combinedInfo;
       });
-      this.setState({ team1, team2 });
-    });
+    };
 
+    const team1 = combineTeamInfo(this.props.location.state.team1);
+    const team2 = combineTeamInfo(this.props.location.state.team2); 
+    this.setState({ team1, team2 });
   }
 
   handleChange(e) {

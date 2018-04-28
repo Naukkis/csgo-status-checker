@@ -6,7 +6,11 @@ module.exports = {
       "describe": true,
       "beforeAll": true,
      },
+     "parser": "babel-eslint",
      "rules": {
-        "linebreak-style": 0
+        "linebreak-style": 0,
+        "no-console": 0,
+        "no-use-before-define": ["error", { "functions": false, "classes": true }],
+        "react/forbid-prop-types": 0
     }
 };

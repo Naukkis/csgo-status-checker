@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import axios from 'axios';
-import NavigationBar from './components/NavigationBar';
-import StatusInput from './pages/StatusInput';
+import NavigationBar from './navigation/NavigationBar';
+import Main from './pages/Main';
 import MatchContainer from './pages/MatchContainer';
 import MatchPage from './pages/MatchPage';
 import NotFound from './pages/NotFound';
@@ -23,7 +23,7 @@ class App extends Component {
       <div className="App ui text container">
         <NavigationBar />
         <Switch>
-          <Route exact path="/" component={StatusInput} />
+          <Route exact path="/" component={Main} />
           <Route exact path="/matches" component={MatchContainer} />
           <Route path="/matches/:id" component={MatchPage} />
           <Route component={NotFound} />
