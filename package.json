@@ -23,7 +23,8 @@
     "client": "node start-client.js",
     "serverDev": "nodemon server/server.js",
     "test": "jasmine",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
   "devDependencies": {
     "concurrently": "3.1.0",
