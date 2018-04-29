@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 async function playerSummaries(steamids) {
-  const summaries = await axios.get(`/steam/getPlayerSummary/?q=${steamids}`)
+  const summaries = await axios.get(`/steam/getPlayerSummary/?q=${steamids}`);
   return summaries.data.response.players;
 }
 
@@ -40,47 +40,28 @@ function CSGOPlayTime(steamid, cb) {
     });
 }
 
-function checkWhoAreFriends(friendList, playerIDsFromMatch, cb) {
-  const friendNames = [];
-  // people with >100 friends are returned in list of lists
-  const friends = flattenFriendlist(friendList);
-  const nickQuery = buildQuery(friends, playerIDsFromMatch);
-  if (nickQuery) {
-    axios.get(`/steam/getPlayerSummary/?q=${nickQuery}`)
-      .then((response) => {
-        response.data.response.players.forEach((player) => {
-          friendNames.push(player.personaname);
-        });
-        cb(friendNames, countBannedFriends(friends));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-}
-
-function flattenFriendlist(friends) {
-  let flatFriendList = [];
-  if (friends.length > 1) {
-    flatFriendList = friends.reduce((prev, curr) => {
-      return prev.concat(curr);
+function checkWhoAreFriends(friendList, playerSummariesFromMatch) {
+  
+  const gagga = playerSummariesFromMatch.reduce((prev, curr) => {
+    console.log(prev);
+    console.log(curr);
+    friendList.forEach((player) => {
+      if (player.SteamId === curr.steamid) {
+        console.log('lol');
+      }
     });
-  } else {
-    flatFriendList = friends;
-  }
-  return flatFriendList;
-}
-
-function buildQuery(friendList, playerIDsFromMatch) {
-  let query = '';
+    return prev;
+  });
+  console.log(gagga);
+  const friendNames = [];
   friendList.forEach((player) => {
-    playerIDsFromMatch.forEach((id) => {
-      if (id === player.SteamId) {
-        query += `${player.SteamId},`;
+    playerSummariesFromMatch.forEach((playerSum) => {
+      if (playerSum.steamid === player.SteamId) {
+        friendNames.push(playerSum.personaname);
       }
     });
   });
-  return query;
+  return friendNames;
 }
 
 function countBannedFriends(friendList) {
@@ -100,4 +81,5 @@ module.exports = {
   playerStats,
   CSGOPlayTime,
   checkWhoAreFriends,
+  countBannedFriends,
 };

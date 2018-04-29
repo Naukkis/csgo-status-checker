@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import MatchTablePro from '../components/MatchTablePro';
-import hasBeenBanned from '../utils/hasBeenBanned';
+import { hasBeenBanned } from '../utils/utils';
 
 class MatchContainer extends React.Component {
   constructor(props) {
@@ -13,14 +13,14 @@ class MatchContainer extends React.Component {
     const userID = localStorage.getItem('userID');
     if (userID !== 'undefined') {
       axios.get(`/api/matches/?q=${userID}`)
-        .then((res) => {
-          res.data.data.forEach((matchData) => {
+        .then((matches) => {
+          matches.data.data.forEach((matchData) => {
             axios.get(`/api/players-from-match/?q=${matchData.match_id}`)
-              .then((response) => {
+              .then((res) => {
                 const match = matchData;
-                match.team1 = response.data.team1;
-                match.team2 = response.data.team2;
-                match.bannedPlayers = response.data.playerBans.filter(player => hasBeenBanned(player));
+                match.team1 = res.data.team1;
+                match.team2 = res.data.team2;
+                match.bannedPlayers = res.data.playerBans.filter(player => hasBeenBanned(player));
                 const tempState = this.state.matches;
                 tempState.push(match);
                 tempState.sort((a, b) => b.match_id - a.match_id);
