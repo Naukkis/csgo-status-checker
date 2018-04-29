@@ -17,7 +17,6 @@ class PlayerProfile extends React.Component {
       friendsInMatch: [],
       comment: this.props.comment || '',
       CSGOPlaytime: {},
-      playerSummaries: this.props.playerSummaries,
     };
   }
 
@@ -31,11 +30,15 @@ class PlayerProfile extends React.Component {
       const friendBanStatuses = await getPlayerBansOnFriendList(steamid);
       // people with >100 friends are returned in list of lists, must be flatten
       const flattenedFriendList = friendBanStatuses.reduce((prev, curr) => prev.concat(curr));
-      const friendsInMatch = checkWhoAreFriends(flattenedFriendList, this.state.playerSummaries);
+      const friendsInMatch = checkWhoAreFriends(flattenedFriendList, this.props.playerSummaries);
       const numberOfBannedFriends = countBannedFriends(flattenedFriendList);
       this.setState({ friendsInMatch, numberOfBannedFriends });
     }
   }
+
+ handleChange = (e) => {
+   this.setState({ comment: e.target.value });
+ }
 
   save = () => {
     axios.put('/api/matches/add-comment', {

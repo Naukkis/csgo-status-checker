@@ -40,46 +40,10 @@ function CSGOPlayTime(steamid, cb) {
     });
 }
 
-function checkWhoAreFriends(friendList, playerSummariesFromMatch) {
-  
-  const gagga = playerSummariesFromMatch.reduce((prev, curr) => {
-    console.log(prev);
-    console.log(curr);
-    friendList.forEach((player) => {
-      if (player.SteamId === curr.steamid) {
-        console.log('lol');
-      }
-    });
-    return prev;
-  });
-  console.log(gagga);
-  const friendNames = [];
-  friendList.forEach((player) => {
-    playerSummariesFromMatch.forEach((playerSum) => {
-      if (playerSum.steamid === player.SteamId) {
-        friendNames.push(playerSum.personaname);
-      }
-    });
-  });
-  return friendNames;
-}
-
-function countBannedFriends(friendList) {
-  let bannedFriends = 0;
-  friendList.forEach((player) => {
-    if (player.VACBanned || player.CommunityBanned || player.NumberOfGameBans > 0) {
-      bannedFriends += 1;
-    }
-  });
-  return bannedFriends;
-}
-
 module.exports = {
   playerSummaries,
   banStatus,
   getPlayerBansOnFriendList,
   playerStats,
   CSGOPlayTime,
-  checkWhoAreFriends,
-  countBannedFriends,
 };
