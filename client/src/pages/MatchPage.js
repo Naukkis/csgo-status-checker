@@ -35,7 +35,7 @@ class MatchPage extends React.Component {
     const banStatuses = await banStatus(ids);
 
     const combineTeamInfo = (team) => {
-      return team.map((player) => {
+      const teamInfo = team.map((player) => {
         const combinedInfo = {};
         combinedInfo.steamid64 = player.steamid64;
         combinedInfo.match = player;
@@ -43,6 +43,7 @@ class MatchPage extends React.Component {
         combinedInfo.banInfo = banStatuses.filter(x => x.SteamId === player.steamid64);
         return combinedInfo;
       });
+      return teamInfo;
     };
 
     const team1 = combineTeamInfo(this.props.location.state.team1);

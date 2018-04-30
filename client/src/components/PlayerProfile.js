@@ -17,6 +17,7 @@ class PlayerProfile extends React.Component {
       friendsInMatch: [],
       comment: this.props.comment || '',
       CSGOPlaytime: {},
+      commentSaved: false,
     };
   }
 
@@ -36,9 +37,9 @@ class PlayerProfile extends React.Component {
     }
   }
 
- handleChange = (e) => {
-   this.setState({ comment: e.target.value });
- }
+  handleChange = (e) => {
+    this.setState({ comment: e.target.value });
+  }
 
   save = () => {
     axios.put('/api/matches/add-comment', {
@@ -46,7 +47,14 @@ class PlayerProfile extends React.Component {
       steamid64: this.props.summary.steamid,
       comment: this.state.comment,
     })
-      .then(response => console.log(response.data))
+      .then((response) => {
+        if (response.data.status === "success") {
+          this.setState({ commentSaved: true });
+          setTimeout(() => {
+            this.setState({ commentSaved: false });
+          }, 5000);
+        }
+      })
       .catch(error => console.log(error));
   }
 
@@ -66,11 +74,12 @@ class PlayerProfile extends React.Component {
         </a>
         <a href={`https://csgo-stats.com/search/${this.props.summary.steamid}`} target="_blank">CS:GO-Stats.com</a>
         {this.props.children}
-        { this.props.matchID &&
-        <div>
-          <input type="text" value={this.state.comment} onChange={this.handleChange} />
-          <button onClick={this.save}>Save</button>
-        </div>
+        {this.props.matchID &&
+          <div>
+            <input type="text" value={this.state.comment} onChange={this.handleChange} />
+            <button onClick={this.save}>Save</button>
+            {this.state.commentSaved && <p style={{ borderStyle: 'solid', borderColor: 'green' }}>Comment saved</p>}
+          </div>
         }
         <BanInfo
           VACBanned={this.props.banInfo.VACBanned}
@@ -90,7 +99,7 @@ class PlayerProfile extends React.Component {
 
               </div>
             ) :
-              <p>Private Profile</p>
+            <p>Private Profile</p>
           }
           <BannedFriends bannedFriends={this.state.numberOfBannedFriends} />
           <p>Friends with:</p>
@@ -124,6 +133,7 @@ PlayerProfile.propTypes = {
   matches: PropTypes.array,
   playerSummaries: PropTypes.arrayOf(PropTypes.object).isRequired,
   matchID: PropTypes.number,
+  children: PropTypes.element,
 };
 
 PlayerProfile.defaultProps = {
@@ -131,6 +141,7 @@ PlayerProfile.defaultProps = {
   comment: '',
   previouslyPlayedWith: [],
   matchID: 0,
+  children: null,
 };
 
 export default PlayerProfile;
