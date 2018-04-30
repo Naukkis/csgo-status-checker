@@ -9,6 +9,7 @@ class Teams extends React.Component {
       maxWidth: 400,
       wordWrap: 'break-word',
     };
+    const playerSummaries = this.props.players.map(x => x.summary[0]);
     return (
       <td style={tdStyle}>
         {this.props.players.map(player =>
@@ -17,7 +18,7 @@ class Teams extends React.Component {
             summary={player.summary[0]}
             banInfo={player.banInfo[0]}
             matchID={this.props.matchID}
-            listOfIds={this.props.listOfIds}
+            playerSummaries={playerSummaries}
           />))}
       </td>);
   }
@@ -28,5 +29,4 @@ export default Teams;
 Teams.propTypes = {
   players: PropTypes.array.isRequired,
   matchID: PropTypes.number.isRequired,
-  listOfIds: PropTypes.array.isRequired,
 };

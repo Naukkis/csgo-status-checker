@@ -106,10 +106,10 @@ class MatchPage extends React.Component {
             </tr>
             <tr>
               {this.state.team1.length > 0 &&
-                <Teams players={this.state.team1} matchID={data.matchID} listOfIds={this.state.listOfIds} />
+                <Teams players={this.state.team1} matchID={data.matchID} />
               }
               {this.state.team2.length > 0 &&
-                <Teams players={this.state.team2} matchID={data.matchID} listOfIds={this.state.listOfIds} />
+                <Teams players={this.state.team2} matchID={data.matchID} />
               }
             </tr>
           </tbody>
