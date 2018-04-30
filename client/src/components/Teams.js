@@ -5,9 +5,14 @@ import PlayerProfile from './PlayerProfile';
 // eslint-disable-next-line
 class Teams extends React.Component {
   render() {
+    const playerComment = steamid => (
+      this.props.players.filter(x => x.match.steamid64 === steamid)[0].match.player_comment
+    );
+
     const tdStyle = {
       maxWidth: 400,
       wordWrap: 'break-word',
+      verticalAlign: 'top',
     };
     const playerSummaries = this.props.players.map(x => x.summary[0]);
     return (
@@ -19,6 +24,7 @@ class Teams extends React.Component {
             banInfo={player.banInfo[0]}
             matchID={this.props.matchID}
             playerSummaries={playerSummaries}
+            comment={playerComment(player.steamid64)}
           />))}
       </td>);
   }

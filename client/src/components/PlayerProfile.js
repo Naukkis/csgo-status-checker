@@ -66,8 +66,12 @@ class PlayerProfile extends React.Component {
         </a>
         <a href={`https://csgo-stats.com/search/${this.props.summary.steamid}`} target="_blank">CS:GO-Stats.com</a>
         {this.props.children}
-        <input type="text" value={this.state.comment} onChange={this.handleChange} />
-        <button onClick={this.save}>Save</button>
+        { this.props.matchID &&
+        <div>
+          <input type="text" value={this.state.comment} onChange={this.handleChange} />
+          <button onClick={this.save}>Save</button>
+        </div>
+        }
         <BanInfo
           VACBanned={this.props.banInfo.VACBanned}
           NumberOfVACBans={this.props.banInfo.NumberOfVACBans}
@@ -86,7 +90,7 @@ class PlayerProfile extends React.Component {
 
               </div>
             ) :
-            <p>Private Profile</p>
+              <p>Private Profile</p>
           }
           <BannedFriends bannedFriends={this.state.numberOfBannedFriends} />
           <p>Friends with:</p>
@@ -96,8 +100,11 @@ class PlayerProfile extends React.Component {
           </ul>
         </div>
         {this.props.previouslyPlayedWith &&
-          <PreviousMatches previouslyPlayedWith={this.props.previouslyPlayedWith} matches={this.props.matches} />}
-
+          <PreviousMatches
+            previouslyPlayedWith={this.props.previouslyPlayedWith}
+            matches={this.props.matches}
+          />
+        }
       </div>
     );
   }
@@ -116,12 +123,14 @@ PlayerProfile.propTypes = {
   comment: PropTypes.string,
   matches: PropTypes.array,
   playerSummaries: PropTypes.arrayOf(PropTypes.object).isRequired,
+  matchID: PropTypes.number,
 };
 
 PlayerProfile.defaultProps = {
   matches: [],
   comment: '',
   previouslyPlayedWith: [],
+  matchID: 0,
 };
 
 export default PlayerProfile;
