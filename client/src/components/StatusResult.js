@@ -33,7 +33,6 @@ class StatusResult extends React.Component {
     this.saveMatch = this.saveMatch.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleMapPick = this.handleMapPick.bind(this);
-    console.log(this.props);
   }
 
   handleChange(e) {
@@ -146,10 +145,10 @@ class StatusResult extends React.Component {
             <span className="item" key={data.steamid}>
               <PlayerProfile
                 summary={data}
-                listOfIds={this.props.steamids}
                 previouslyPlayedWith={previousMatches(data.steamid)}
                 matches={this.props.matches}
                 banInfo={this.props.banStatuses.filter(x => x.SteamId === data.steamid)[0]}
+                playerSummaries={this.props.playerSummaries}
               >
                 <AddTeammate
                   steamid={data.steamid}

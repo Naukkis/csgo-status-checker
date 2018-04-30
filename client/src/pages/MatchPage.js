@@ -4,7 +4,7 @@ import axios from 'axios';
 import Teams from '../components/Teams';
 import { dateFormat } from '../utils/dateFormat';
 import { playerSummaries, banStatus } from '../utils/apiCalls';
-import MapSelector from '../components/buttons/MapSelector';
+import MapSelector from '../components/MapSelector';
 
 class MatchPage extends React.Component {
   constructor(props) {
@@ -31,12 +31,11 @@ class MatchPage extends React.Component {
       ...this.props.location.state.team2.map(x => x.steamid64),
     ];
 
-    this.setState({ listOfIds: ids });
     const summaries = await playerSummaries(ids);
     const banStatuses = await banStatus(ids);
 
     const combineTeamInfo = (team) => {
-      return team.map((player) => {
+      const teamInfo = team.map((player) => {
         const combinedInfo = {};
         combinedInfo.steamid64 = player.steamid64;
         combinedInfo.match = player;
@@ -44,10 +43,11 @@ class MatchPage extends React.Component {
         combinedInfo.banInfo = banStatuses.filter(x => x.SteamId === player.steamid64);
         return combinedInfo;
       });
+      return teamInfo;
     };
 
     const team1 = combineTeamInfo(this.props.location.state.team1);
-    const team2 = combineTeamInfo(this.props.location.state.team2); 
+    const team2 = combineTeamInfo(this.props.location.state.team2);
     this.setState({ team1, team2 });
   }
 
@@ -106,10 +106,10 @@ class MatchPage extends React.Component {
             </tr>
             <tr>
               {this.state.team1.length > 0 &&
-                <Teams players={this.state.team1} matchID={data.matchID} listOfIds={this.state.listOfIds} />
+                <Teams players={this.state.team1} matchID={data.matchID} />
               }
               {this.state.team2.length > 0 &&
-                <Teams players={this.state.team2} matchID={data.matchID} listOfIds={this.state.listOfIds} />
+                <Teams players={this.state.team2} matchID={data.matchID} />
               }
             </tr>
           </tbody>

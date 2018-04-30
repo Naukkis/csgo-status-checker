@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import Stats from './Stats';
 import BannedFriends from './BannedFriends';
-import apiCalls from '../utils/apiCalls';
+import { playerStats, CSGOPlayTime, getPlayerBansOnFriendList } from '../utils/apiCalls';
+import { checkWhoAreFriends, countBannedFriends } from '../utils/utils';
 import PreviousMatches from './PreviousMatches';
 import BanInfo from './BanInfo';
 
@@ -12,26 +13,32 @@ class PlayerProfile extends React.Component {
     super(props);
     this.state = {
       playerStats: [],
-      bannedFriends: 0,
-      friends: [],
+      numberOfBannedFriends: 0,
+      friendsInMatch: [],
+      comment: this.props.comment || '',
       CSGOPlaytime: {},
+      commentSaved: false,
     };
   }
 
   async componentDidMount() {
     const { steamid } = this.props.summary;
-    const playerIDsFromMatch = this.props.listOfIds;
     const publicProfile = this.props.summary.communityvisibilitystate;
     // with old privacy settings 3 == public profile, but it doesn't apply to game stats anymore
     if (publicProfile === 3) {
-      apiCalls.playerStats(steamid, data => this.setState({ playerStats: data }));
-      apiCalls.CSGOPlayTime(steamid, data => this.setState({ CSGOPlaytime: data }));
-      const banStatuses = await apiCalls.getPlayerBansOnFriendList(steamid);
-      apiCalls.checkWhoAreFriends(banStatuses, playerIDsFromMatch, (friendNames, bannedFriends) => {
-        this.setState({ friends: friendNames, bannedFriends });
-      });
+      playerStats(steamid, data => this.setState({ playerStats: data }));
+      CSGOPlayTime(steamid, data => this.setState({ CSGOPlaytime: data }));
+      const friendBanStatuses = await getPlayerBansOnFriendList(steamid);
+      // people with >100 friends are returned in list of lists, must be flatten
+      const flattenedFriendList = friendBanStatuses.reduce((prev, curr) => prev.concat(curr));
+      const friendsInMatch = checkWhoAreFriends(flattenedFriendList, this.props.playerSummaries);
+      const numberOfBannedFriends = countBannedFriends(flattenedFriendList);
+      this.setState({ friendsInMatch, numberOfBannedFriends });
     }
-    console.log(this.props);
+  }
+
+  handleChange = (e) => {
+    this.setState({ comment: e.target.value });
   }
 
   save = () => {
@@ -40,7 +47,14 @@ class PlayerProfile extends React.Component {
       steamid64: this.props.summary.steamid,
       comment: this.state.comment,
     })
-      .then(response => console.log(response.data))
+      .then((response) => {
+        if (response.data.status === "success") {
+          this.setState({ commentSaved: true });
+          setTimeout(() => {
+            this.setState({ commentSaved: false });
+          }, 5000);
+        }
+      })
       .catch(error => console.log(error));
   }
 
@@ -60,8 +74,13 @@ class PlayerProfile extends React.Component {
         </a>
         <a href={`https://csgo-stats.com/search/${this.props.summary.steamid}`} target="_blank">CS:GO-Stats.com</a>
         {this.props.children}
-        <input type="text" value={this.state.comment} onChange={this.handleChange} />
-        <button onClick={this.save}>Save</button>
+        {this.props.matchID &&
+          <div>
+            <input type="text" value={this.state.comment} onChange={this.handleChange} />
+            <button onClick={this.save}>Save</button>
+            {this.state.commentSaved && <p style={{ borderStyle: 'solid', borderColor: 'green' }}>Comment saved</p>}
+          </div>
+        }
         <BanInfo
           VACBanned={this.props.banInfo.VACBanned}
           NumberOfVACBans={this.props.banInfo.NumberOfVACBans}
@@ -77,20 +96,24 @@ class PlayerProfile extends React.Component {
                   playerStats={this.state.playerStats}
                   csgoplaytime={this.state.CSGOPlaytime}
                 />
-                <BannedFriends bannedFriends={this.state.bannedFriends} />
-                <p>Friends with:</p>
-                <ul className="friendsWith">
-                  {this.state.friends.map(friend =>
-                    <li key={friend}> {friend} </li>)}
-                </ul>
+
               </div>
             ) :
             <p>Private Profile</p>
           }
+          <BannedFriends bannedFriends={this.state.numberOfBannedFriends} />
+          <p>Friends with:</p>
+          <ul className="friendsWith">
+            {this.state.friendsInMatch.map(friend =>
+              <li key={friend}> {friend} </li>)}
+          </ul>
         </div>
         {this.props.previouslyPlayedWith &&
-          <PreviousMatches previouslyPlayedWith={this.props.previouslyPlayedWith} matches={this.props.matches} />}
-
+          <PreviousMatches
+            previouslyPlayedWith={this.props.previouslyPlayedWith}
+            matches={this.props.matches}
+          />
+        }
       </div>
     );
   }
@@ -105,16 +128,20 @@ PlayerProfile.propTypes = {
     communityvisibilitystate: '',
   }).isRequired,
   previouslyPlayedWith: PropTypes.array,
-  listOfIds: PropTypes.array.isRequired,
-  banInfo: PropTypes.object,
+  banInfo: PropTypes.object.isRequired,
   comment: PropTypes.string,
-  matches: PropTypes.array, 
+  matches: PropTypes.array,
+  playerSummaries: PropTypes.arrayOf(PropTypes.object).isRequired,
+  matchID: PropTypes.number,
+  children: PropTypes.element,
 };
 
 PlayerProfile.defaultProps = {
   matches: [],
   comment: '',
   previouslyPlayedWith: [],
+  matchID: 0,
+  children: null,
 };
 
 export default PlayerProfile;
