@@ -24,7 +24,7 @@ function checkWhoAreFriends(friendList, playerSummariesFromMatch) {
 function countBannedFriends(friendList) {
   let bannedFriends = 0;
   friendList.forEach((player) => {
-    if (player.VACBanned || player.CommunityBanned || player.NumberOfGameBans > 0) {
+    if (player.VACBanned || player.NumberOfGameBans > 0) {
       bannedFriends += 1;
     }
   });

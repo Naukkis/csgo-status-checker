@@ -60,6 +60,7 @@ typings/
 # create db script
 create_db.sql
 
-vscode workspace
+# editors
 *.code-workspace
 .vscode/
+.idea/
