@@ -4,10 +4,10 @@
   "private": true,
   "proxy": "http://localhost:3001/",
   "devDependencies": {
-    "babel-core": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-jest": "^22.4.1",
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.6.0",
     "eslint": "^4.9.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.7.0",
@@ -22,7 +22,7 @@
   "dependencies": {
     "axios": "^0.17.0",
     "babel-eslint": "^7.2.3",
-    "babel-plugin-transform-class-properties": "6.22.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "material-design-icons": "^3.0.1",
     "material-ui": "^1.0.0-beta.36",
     "material-ui-icons": "^1.0.0-beta.17",
