@@ -8,6 +8,7 @@ module.exports = {
      },
      "parser": "babel-eslint",
      "rules": {
+        "global-require": 0,
         "linebreak-style": 0,
         "no-console": 0,
         "no-use-before-define": ["error", { "functions": false, "classes": true }],
@@ -16,5 +17,6 @@ module.exports = {
           "array": false,
           "object": true
         }]
+
     }
 };

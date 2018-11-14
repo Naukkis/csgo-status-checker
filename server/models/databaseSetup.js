@@ -2,7 +2,6 @@ const promise = require('bluebird');
 const monitor = require('pg-monitor');
 
 const options = {
-  // Initialization Options
   promiseLib: promise,
 };
 

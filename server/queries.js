@@ -1,19 +1,6 @@
-const db = require('./db');
+import db from './models/databaseSetup';
 const crypto = require('crypto');
 const { playerBanStatus, friendsList } = require('./utilities');
-
-function getUser(req, res, next) {
-  const steamID = req.query.q;
-  db.one('select * from users where steamid64 = $1', steamID)
-    .then((data) => {
-      res.status(200).json({
-        status: 'success',
-        data,
-        message: 'Retrieved ONE user',
-      });
-    })
-    .catch(error => next(error));
-}
 
 function createUser(user, cb) {
   const userid = crypto.randomBytes(3 * 4).toString('base64');
@@ -232,7 +219,6 @@ function matchInfo(req, res, next) {
 
 module.exports = {
   createUser,
-  getUser,
   findUser,
   removeUser,
   addMatch,
